@@ -646,7 +646,10 @@ p { line-height: 1.6; color: var(--fg); }
 }
 .proj-row {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  /* Fixed-width first column so the project names line up regardless
+     of whether the tag is APP-001 (shorter) or PROD-001 / DATA-001
+     (longer). 64px fits JetBrains Mono 11px + 0.1em tracking with room. */
+  grid-template-columns: 64px 1fr auto;
   align-items: center;
   gap: 20px;
   padding: 22px 4px;
