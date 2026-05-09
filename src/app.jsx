@@ -1225,6 +1225,7 @@ function Rocket() {
     // `w` is viewport width (path math); `vh` is viewport height (cull
     // math); `docH` is the canvas's CSS height.
     let w = 0, vh = 0, docH = 0;
+    let lastDpr = 0, lastCssW = 0, lastCssDocH = 0;
     const resize = () => {
       // Cap DPR at 2 — particles are feathered radial gradients where
       // DPR 3 isn't perceptible, and a tall doc × DPR 3 would push the
@@ -1233,12 +1234,21 @@ function Rocket() {
       const cssW = window.innerWidth;
       const cssH = window.innerHeight;
       const cssDocH = Math.max(cssH, document.documentElement.scrollHeight);
+      // Viewport height is read fresh each frame for cull math, but we
+      // also keep it on the closure for any non-render reads.
+      vh = cssH;
+      // Bail if nothing meaningful changed. Setting canvas.width/height
+      // reallocates the backing buffer (and zeroes it), which causes a
+      // visible stutter — and ResizeObserver can fire repeatedly during
+      // iOS URL-bar show/hide. Dedupe so rAF stays smooth.
+      if (dpr === lastDpr && cssW === lastCssW && cssDocH === lastCssDocH) return;
+      lastDpr = dpr; lastCssW = cssW; lastCssDocH = cssDocH;
       canvas.width = Math.round(cssW * dpr);
       canvas.height = Math.round(cssDocH * dpr);
       canvas.style.width = cssW + 'px';
       canvas.style.height = cssDocH + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      w = cssW; vh = cssH; docH = cssDocH;
+      w = cssW; docH = cssDocH;
     };
     resize();
     window.addEventListener('resize', resize);
@@ -1374,18 +1384,26 @@ function Rocket() {
       }
 
       // ── Update + render particles ────────────────────────────
-      // Canvas is full-document-sized; clear all of it each frame so
-      // we never accumulate ghost particles in regions outside the
-      // current viewport. The cost scales with doc area but is still
-      // a single hardware-accelerated fill.
-      ctx.clearRect(0, 0, w, docH);
-
-      // Cull bounds in DOC coords — skip particles fully outside the
-      // visible viewport. Drawing happens at p.x/p.y directly because
-      // the canvas itself is doc-anchored.
+      // Canvas is full-document-sized but we only clear the visible
+      // viewport region each frame. Particles outside the viewport are
+      // culled (not redrawn), so old draws of them stay on the canvas
+      // in non-viewport regions — and any time the user scrolls into
+      // such a region, *that* frame's clear (covering the new viewport)
+      // wipes the stale draws before the user can see them. Net result:
+      // visually clean, with ~1/30th the per-frame fill cost vs. clearing
+      // the entire 6000-px-tall canvas. Big win on mobile GPUs.
       const scrollX = window.scrollX;
       const scrollY = window.scrollY;
+      // Read viewport height fresh each frame — iOS URL bar show/hide
+      // changes innerHeight without firing resize.
+      vh = window.innerHeight;
       const cullPad = PARTICLE_BASE_R + PARTICLE_GROW_R;
+      ctx.clearRect(
+        scrollX - cullPad,
+        scrollY - cullPad,
+        w + cullPad * 2,
+        vh + cullPad * 2,
+      );
 
       // Iterate backwards so splicing dead particles is safe.
       for (let i = particles.length - 1; i >= 0; i--) {
