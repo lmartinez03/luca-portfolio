@@ -1,9 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <!-- Same rocket silhouette as the one wandering the page, centered
-       inside a 32x32 favicon viewport. Flame, body, window, fins. -->
-  <g transform="translate(16, 14) scale(0.6)">
+       inside a 32x32 favicon viewport. Flame, body, window, fins.
+       translate(16, 17) puts the rocket center slightly below the
+       favicon midpoint so the top doesn't kiss the tab edge.
+       scale(0.7) makes it noticeably larger; the flame path is
+       slightly shortened (tip at y=20 instead of 24) so the bottom
+       still fits inside the icon. -->
+  <g transform="translate(16, 17) scale(0.7)">
     <!-- exhaust flame -->
-    <path d="M -3 16 Q -2 22 0 24 Q 2 22 3 16 Z" fill="#d4a23c" />
+    <path d="M -3 16 Q -2 18 0 20 Q 2 18 3 16 Z" fill="#d4a23c" />
     <!-- body -->
     <path d="M 0 -22 C 8 -14 8 8 6 16 L -6 16 C -8 8 -8 -14 0 -22 Z"
       fill="#f4ead8" stroke="#1a1a1a" stroke-width="2" />
