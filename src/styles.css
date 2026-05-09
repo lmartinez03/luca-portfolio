@@ -5,8 +5,16 @@
    intercept clicks. Z-index sits above page content but below any
    future modals. */
 .rocket-trail {
-  position: fixed;
-  inset: 0;
+  /* Absolute + full-document-height (sized in JS) so the canvas rides
+     the document with the browser's compositor instead of the JS thread.
+     On iOS Safari, position:fixed canvases visibly drag with momentum
+     scroll then snap back — making the trail "come with the scroll then
+     bounce back to the rocket." Doc-anchored, drawing in doc coords,
+     fixes that without any per-frame scrollY math. */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   z-index: 4;
   pointer-events: none;
 }

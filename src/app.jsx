@@ -1217,23 +1217,38 @@ function Rocket() {
     const MULT_EASE = 0.08;            // 0..1 — how snappily the multiplier eases between base and hover
 
     // ── Canvas resize / DPR handling ────────────────────────────
-    // Keep the pixel buffer in sync with CSS size and the device
-    // pixel ratio so the trail stays sharp on hi-DPI displays. We
-    // draw in CSS pixels; the transform handles the DPR scale.
-    let w = 0, h = 0;
+    // Canvas is doc-anchored (position: absolute) and sized to the
+    // FULL document, not the viewport. Drawing in doc coords means
+    // the trail rides the document with the compositor — no per-frame
+    // scrollY math to lag during iOS momentum scroll.
+    //
+    // `w` is viewport width (path math); `vh` is viewport height (cull
+    // math); `docH` is the canvas's CSS height.
+    let w = 0, vh = 0, docH = 0;
     const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
+      // Cap DPR at 2 — particles are feathered radial gradients where
+      // DPR 3 isn't perceptible, and a tall doc × DPR 3 would push the
+      // canvas past iOS Safari's 16384-pixel-per-side limit.
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const cssW = window.innerWidth;
       const cssH = window.innerHeight;
+      const cssDocH = Math.max(cssH, document.documentElement.scrollHeight);
       canvas.width = Math.round(cssW * dpr);
-      canvas.height = Math.round(cssH * dpr);
+      canvas.height = Math.round(cssDocH * dpr);
       canvas.style.width = cssW + 'px';
-      canvas.style.height = cssH + 'px';
+      canvas.style.height = cssDocH + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      w = cssW; h = cssH;
+      w = cssW; vh = cssH; docH = cssDocH;
     };
     resize();
     window.addEventListener('resize', resize);
+    // Doc height can grow after mount (images decode, fonts swap,
+    // sections animate in). Reobserve so the canvas keeps covering
+    // the full document.
+    const docResizeObs = ('ResizeObserver' in window)
+      ? new ResizeObserver(() => resize())
+      : null;
+    if (docResizeObs) docResizeObs.observe(document.body);
 
     // ── Particle pool ───────────────────────────────────────────
     // Plain array; ~96 live particles max at default settings, which
@@ -1359,16 +1374,18 @@ function Rocket() {
       }
 
       // ── Update + render particles ────────────────────────────
-      // Full clear; we manage fade via per-particle alpha so the
-      // canvas never accumulates stale ghost trails.
-      ctx.clearRect(0, 0, w, h);
+      // Canvas is full-document-sized; clear all of it each frame so
+      // we never accumulate ghost particles in regions outside the
+      // current viewport. The cost scales with doc area but is still
+      // a single hardware-accelerated fill.
+      ctx.clearRect(0, 0, w, docH);
 
-      // Particles are stored in document coords; the canvas is
-      // viewport-fixed. Subtract current scroll to find each
-      // particle's screen position.
+      // Cull bounds in DOC coords — skip particles fully outside the
+      // visible viewport. Drawing happens at p.x/p.y directly because
+      // the canvas itself is doc-anchored.
       const scrollX = window.scrollX;
       const scrollY = window.scrollY;
-      const cullPad = PARTICLE_BASE_R + PARTICLE_GROW_R; // skip particles fully off-screen
+      const cullPad = PARTICLE_BASE_R + PARTICLE_GROW_R;
 
       // Iterate backwards so splicing dead particles is safe.
       for (let i = particles.length - 1; i >= 0; i--) {
@@ -1378,10 +1395,10 @@ function Rocket() {
         p.x += p.vx;
         p.y += p.vy;
 
-        // Doc → screen coords. Cull anything fully outside the viewport.
-        const sx = p.x - scrollX;
-        const sy = p.y - scrollY;
-        if (sx < -cullPad || sx > w + cullPad || sy < -cullPad || sy > h + cullPad) continue;
+        // Cull particles fully outside the visible viewport (doc-coord
+        // bounds). They still age — they just don't get drawn.
+        if (p.x < scrollX - cullPad || p.x > scrollX + w + cullPad ||
+            p.y < scrollY - cullPad || p.y > scrollY + vh + cullPad) continue;
 
         const lifeT = p.age / PARTICLE_LIFE_S;             // 0..1
         const radius = PARTICLE_BASE_R + PARTICLE_GROW_R * lifeT;
@@ -1395,12 +1412,12 @@ function Rocket() {
 
         // Soft round particle via radial gradient — gives a hot
         // core with a feathered edge instead of a hard circle.
-        const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, radius);
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius);
         grad.addColorStop(0, `rgba(${r | 0},${g | 0},${b | 0},${alpha})`);
         grad.addColorStop(1, `rgba(${r | 0},${g | 0},${b | 0},0)`);
         ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.arc(sx, sy, radius, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
         ctx.fill();
       }
 
@@ -1428,6 +1445,7 @@ function Rocket() {
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseleave', onLeave);
+      if (docResizeObs) docResizeObs.disconnect();
     };
   }, []);
 
