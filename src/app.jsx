@@ -1638,18 +1638,24 @@ function MarsDivider() {
             {/* Inner rotation — tilts the whole craft forward (right) so it
                 reads as moving through the scene instead of hovering. */}
             <g transform="rotate(6)">
-              {/* STATIC swept-rotor "blur disk".
-                  An animated thin ellipse at ~10 rev/s aliases between
-                  frames and reads as shaky. Drawing the rotor as a stable
-                  motion-blur disk gives the appearance of speed without
-                  any per-frame jitter. */}
+              {/* STATIC coaxial swept-rotor "blur disks".
+                  Real Ingenuity has two counter-rotating rotors stacked
+                  ~4 SVG units apart on the same mast. An animated thin
+                  ellipse at ~10 rev/s aliases between frames and reads
+                  as shaky, so each rotor is a stable motion-blur disk —
+                  same speed cue without per-frame jitter. */}
+              <g transform="translate(0, -22)">
+                <ellipse rx="22" ry="2.8" fill="#555" opacity="0.4" />
+                <ellipse rx="22" ry="1.4" fill="#1a1a1a" opacity="0.75" />
+                <circle r="2" fill="#666" stroke="#1a1a1a" strokeWidth="0.6" />
+              </g>
               <g transform="translate(0, -18)">
                 <ellipse rx="22" ry="2.8" fill="#555" opacity="0.4" />
                 <ellipse rx="22" ry="1.4" fill="#1a1a1a" opacity="0.75" />
                 <circle r="2" fill="#666" stroke="#1a1a1a" strokeWidth="0.6" />
               </g>
-              {/* mast */}
-              <rect x="-1.5" y="-16" width="3" height="9" rx="0.8"
+              {/* mast — extended up past the second rotor */}
+              <rect x="-1.5" y="-20" width="3" height="13" rx="0.8"
                 fill="#888" stroke="#1a1a1a" strokeWidth="0.5" />
               {/* small cubic body */}
               <rect x="-9" y="-7" width="18" height="14" rx="3"
