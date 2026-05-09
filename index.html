@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Luca Martinez — Software & Robotics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Peruvian-night palette: deep indigo space + warm earth accents */
+    --void: #07060d;
+    --ink: #0d0b1a;
+    --night: #14122b;
+    --night-2: #1c1838;
+    --line: rgba(255, 230, 200, 0.08);
+    --line-bright: rgba(255, 230, 200, 0.18);
+    --fg: #f4ead8;
+    --fg-dim: rgba(244, 234, 216, 0.62);
+    --fg-faint: rgba(244, 234, 216, 0.38);
+
+    /* Peruvian accents — warm hues, shared chroma */
+    --terracotta: oklch(65% 0.15 40);
+    --ochre: oklch(75% 0.13 75);
+    --crimson: oklch(58% 0.19 25);
+    --jade: oklch(60% 0.10 165);
+
+    --accent: var(--terracotta);
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--void);
+    color: var(--fg);
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  body {
+    background:
+      radial-gradient(ellipse 1200px 800px at 80% -10%, rgba(212, 116, 60, 0.12), transparent 60%),
+      radial-gradient(ellipse 900px 600px at 10% 30%, rgba(70, 50, 130, 0.18), transparent 60%),
+      var(--void);
+  }
+
+  ::selection { background: var(--ochre); color: var(--void); }
+
+  .mono { font-family: 'JetBrains Mono', monospace; font-weight: 400; }
+  .serif { font-family: 'Instrument Serif', serif; font-weight: 400; }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* Stars */
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .scanline-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 3px,
+      rgba(255, 255, 255, 0.012) 3px,
+      rgba(255, 255, 255, 0.012) 4px
+    );
+    mix-blend-mode: overlay;
+  }
+
+  /* Layout primitives */
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 48px;
+    position: relative;
+    z-index: 2;
+  }
+  @media (max-width: 720px) {
+    .container { padding: 0 24px; }
+  }
+
+  /* Section header label */
+  .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .label::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+  .label-num {
+    color: var(--accent);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    border: 1px solid var(--line-bright);
+    border-radius: 999px;
+    background: rgba(255, 230, 200, 0.03);
+    color: var(--fg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  .btn:hover {
+    background: var(--accent);
+    color: var(--void);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--void);
+    border-color: var(--accent);
+  }
+  .btn-primary:hover {
+    background: var(--ochre);
+    border-color: var(--ochre);
+  }
+
+  /* Smooth scroll */
+  html { scroll-behavior: smooth; }
+</style>
+
+<script type="application/json" id="tweak-defaults">
+{
+  "accent": "terracotta",
+  "showStars": true,
+  "showScanlines": true
+}
+</script>
+</head>
+<body>
+  <canvas class="stars" id="starfield"></canvas>
+  <div class="scanline-overlay" id="scanlines"></div>
+
+  <div id="root"></div>
+
+  <script>
+    // Starfield — subtle parallax twinkle
+    (function() {
+      const canvas = document.getElementById('starfield');
+      const ctx = canvas.getContext('2d');
+      let stars = [];
+      let w, h;
+
+      function resize() {
+        w = canvas.width = window.innerWidth * devicePixelRatio;
+        h = canvas.height = window.innerHeight * devicePixelRatio;
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+        const count = Math.floor((w * h) / (devicePixelRatio * devicePixelRatio) / 1800);
+        stars = Array.from({ length: count }, () => ({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: Math.random() * 1.4 * devicePixelRatio + 0.3,
+          a: Math.random() * 0.7 + 0.2,
+          tw: Math.random() * 0.02 + 0.005,
+          phase: Math.random() * Math.PI * 2,
+          hue: Math.random() < 0.08 ? 'warm' : 'cool'
+        }));
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      let t = 0;
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        for (const s of stars) {
+          const tw = 0.5 + 0.5 * Math.sin(t * s.tw + s.phase);
+          ctx.globalAlpha = s.a * tw;
+          ctx.fillStyle = s.hue === 'warm' ? '#f4cb8a' : '#dfe8ff';
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        t += 1;
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+  </script>
+
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

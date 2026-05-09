@@ -1,0 +1,914 @@
+/* ============ ROCKET ============
+   A small cartoony spaceship overlay that flies along a scroll-driven
+   path across the viewport, leaving a fading red-fire-into-smoke
+   particle trail. Both layers are pointer-events:none so they never
+   intercept clicks. Z-index sits above page content but below any
+   future modals. */
+.rocket-trail {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+.rocket-ship {
+  /* Absolute (not fixed) so the ship is anchored to document coords —
+     it can be at the bottom of the page while the user is at the top.
+     JS sets a translate() in document coords to move it; the negative
+     margins center the ship's bounding box on the translate point. */
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 36px;
+  height: 50px;
+  margin-left: -18px;
+  margin-top: -25px;
+  z-index: 5;
+  pointer-events: none;
+  will-change: transform;
+}
+/* Exhaust flame flicker — purely cosmetic, runs constantly at the
+   same rate the ship is on screen. transform-origin sits near the
+   top of the flame so it stretches/squashes along its length. */
+.rocket-flame {
+  transform-origin: 50% 30%;
+  animation: rocket-flame 0.16s ease-in-out infinite alternate;
+}
+@keyframes rocket-flame {
+  from { transform: scaleY(0.85) scaleX(1.05); opacity: 0.85; }
+  to   { transform: scaleY(1.10) scaleX(0.92); opacity: 1.00; }
+}
+/* On narrow screens drop the rocket entirely — saves the rAF + canvas
+   work and avoids it crowding the stacked mobile layout. */
+@media (max-width: 720px) {
+  .rocket-trail, .rocket-ship { display: none; }
+}
+
+/* ============ MARS DIVIDER ============
+   Rubber-hose-cartoon rover + helicopter "driving" between sections.
+   Spins and ground scroll are driven by SMIL <animateTransform> in
+   the SVG itself (see Rocket component); CSS only handles the small
+   vertical bounce and hover bob. SMIL works in SVG units regardless
+   of how the SVG is scaled, which is why the loop wraps cleanly. */
+.mars-divider {
+  display: block;
+  width: 100%;
+  max-width: 380px;
+  height: 95px;
+  margin: 0 auto;
+  opacity: 0.3;
+  pointer-events: none;
+  /* Pull the divider into the existing gap so the page doesn't grow
+     taller — the section padding above + below gives plenty of room. */
+  margin-top: -40px;
+  margin-bottom: -40px;
+}
+.mars-divider svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Rover bounce: small vertical judder, like driving over rocks.
+   Wraps the rover *content* (inside its positioning <g>) so this
+   CSS transform doesn't override the parent's SVG positioning. */
+.mars-bounce {
+  animation: mars-bounce 0.32s ease-in-out infinite alternate;
+}
+@keyframes mars-bounce {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-2px); }
+}
+
+/* Helicopter hover: slow vertical float. Same pattern as bounce. */
+.mars-bob {
+  animation: mars-bob 0.9s ease-in-out infinite alternate;
+}
+@keyframes mars-bob {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-3px); }
+}
+
+/* ── Variant 4 (Toy): chunkier proportions get a slightly bigger
+       bounce + slower bob, so the toys feel weighty and friendly. */
+.mars-bounce-toy {
+  animation: mars-bounce-toy 0.36s ease-in-out infinite alternate;
+}
+@keyframes mars-bounce-toy {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-3px); }
+}
+/* Reduced-motion: freeze every CSS animation across all variants.
+   SMIL spins/scrolls keep running but at this scale they're subtle. */
+@media (prefers-reduced-motion: reduce) {
+  .mars-bob, .mars-bounce, .mars-bounce-toy { animation: none; }
+}
+
+/* Mobile: shrink the divider so it doesn't dominate stacked layout. */
+@media (max-width: 720px) {
+  .mars-divider {
+    max-width: 280px;
+    height: 70px;
+    margin-top: -20px;
+    margin-bottom: -20px;
+  }
+}
+
+/* ============ TYPOGRAPHY ============ */
+
+h1, h2, h3, h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  margin: 0;
+}
+h1 { font-size: clamp(48px, 8vw, 120px); font-weight: 400; }
+h2 { font-size: clamp(40px, 6vw, 88px); font-weight: 400; }
+h3 { font-size: clamp(24px, 3vw, 36px); font-weight: 500; }
+
+p { line-height: 1.6; color: var(--fg); }
+
+.italic { font-style: italic; }
+.dim { color: var(--fg-dim); }
+.faint { color: var(--fg-faint); }
+.terra { color: var(--terracotta); }
+.ochre { color: var(--ochre); }
+.crimson { color: var(--crimson); }
+/* Traffic-light "go" green — same hue as the SYS · ONLINE dot. */
+.go { color: oklch(72% 0.18 150); }
+.jade { color: var(--jade); }
+
+/* ============ HERO ============ */
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  padding: 0 0 80px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-statusbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 28px;
+  padding-bottom: 28px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  z-index: 5;
+}
+.status-left { display: flex; align-items: center; gap: 10px; color: var(--fg-dim); }
+.status-left .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: oklch(72% 0.18 150);
+  box-shadow: 0 0 8px oklch(72% 0.18 150);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.hero-nav { display: flex; gap: 28px; padding: 0 32px; }
+.hero-nav a {
+  color: var(--fg-dim);
+  transition: color 0.2s;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+.hero-nav a:hover { color: var(--accent); }
+.status-right { color: var(--fg-dim); }
+
+@media (max-width: 880px) {
+  .hero-nav { display: none; }
+}
+
+/* Orbital deck */
+.orbit-deck {
+  position: absolute;
+  right: -180px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(900px, 70vw);
+  aspect-ratio: 1;
+  z-index: 1;
+  opacity: 0.85;
+  pointer-events: none;
+}
+.orbit-moon { transform-origin: 0 0; }
+.orbit-moon-1 { animation: orbit-spin 28s linear infinite; }
+.orbit-moon-2 { animation: orbit-spin 18s linear infinite reverse; }
+.orbit-moon-3 { animation: orbit-spin 42s linear infinite; }
+.orbit-moon-4 { animation: orbit-spin 60s linear infinite reverse; }
+.orbit-moon-5 { animation: orbit-spin 95s linear infinite; }
+@keyframes orbit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.iss-drift {
+  transform-origin: 0 0;
+  animation: iss-bob 14s ease-in-out infinite;
+}
+@keyframes iss-bob {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-6px, 4px) rotate(2deg); }
+}
+
+/* Mobile / narrow viewports: drop the orbit-deck out of absolute
+   positioning so it sits in flow underneath the hero-grid (which
+   collapses to a single column where .hero-side lands last). The
+   `order: 1` pushes it below the grid in the .hero flex column. */
+@media (max-width: 1100px) {
+  .orbit-deck {
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    order: 1;
+    width: min(420px, 90vw);
+    margin: 24px auto 16px;
+    opacity: 0.85;
+  }
+}
+
+/* Planet deck — anchored inside the Experience section, mirroring how
+   .orbit-deck sits inside the hero. Absolute-positioned on the right
+   so the timeline content (which is in a higher-z .container) reads
+   on top of it. The negative right offset pushes part of the planet
+   off-screen, giving the same "in the corner of the universe" feel
+   as the hero's ISS. */
+/* No overflow:hidden here — moons orbiting the planet need to drift
+   vertically past the section's bounds without being clipped. The
+   body's overflow-x:hidden still prevents horizontal scrollbars from
+   the deck's negative right offset, so no extra clipping needed. */
+.section.experience { position: relative; }
+.planet-deck {
+  position: absolute;
+  right: -160px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(720px, 60vw);
+  aspect-ratio: 1;
+  z-index: 1;
+  opacity: 0.85;
+  pointer-events: none; /* purely decorative — don't intercept clicks */
+}
+@media (max-width: 880px) {
+  .planet-deck { right: -45%; opacity: 0.4; }
+}
+
+.hero-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 200px 1fr 240px;
+  gap: 60px;
+  align-items: center;
+  padding-top: 80px;
+  padding-bottom: 60px;
+}
+@media (max-width: 1100px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; padding-top: 60px; }
+}
+
+.hero-meta { display: flex; flex-direction: column; gap: 18px; }
+.hero-meta-item {
+  display: flex; gap: 14px;
+  font-size: 11px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+.hero-meta-item .dim { width: 32px; }
+
+.hero-title h1 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05em;
+}
+.hero-title h1 .line { display: block; }
+.hero-title h1 .serif { font-weight: 400; }
+.hero-title h1 .line.thin  { font-weight: 300; }
+.hero-title h1 .line.heavy { font-weight: 700; }
+
+.hero-sub {
+  margin-top: 32px;
+  font-size: 18px;
+  max-width: 560px;
+  color: var(--fg-dim);
+  line-height: 1.55;
+}
+.hero-sub strong { color: var(--fg); font-weight: 500; }
+.hero-sub em { font-style: italic; color: var(--ochre); font-family: 'Instrument Serif'; font-size: 1.1em; }
+
+.hero-cta {
+  margin-top: 36px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* HUD frame */
+.hero-side {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-end;
+}
+.hud-frame {
+  position: relative;
+  width: 100%;
+  padding: 24px 22px;
+  border: 1px solid var(--line-bright);
+  background: rgba(13, 11, 26, 0.6);
+  backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hud-corner {
+  position: absolute; width: 10px; height: 10px;
+  border: 1px solid var(--accent);
+}
+.hud-corner.tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.hud-corner.tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+.hud-corner.bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+.hud-corner.br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+.hud-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.hud-line:last-child { border-bottom: none; }
+
+.vert-text {
+  writing-mode: vertical-rl;
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  color: var(--fg-faint);
+  text-transform: uppercase;
+}
+
+.hero-bottom {
+  position: relative;
+  z-index: 5;
+}
+.scroll-cue {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--fg-faint);
+}
+.scroll-cue .arrow { animation: bounce 2s infinite; }
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(4px); opacity: 1; }
+}
+
+/* ============ SECTIONS (generic) ============ */
+.section {
+  padding: 140px 0;
+  position: relative;
+  z-index: 2;
+}
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 60px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.section-meta {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+.section-lede {
+  font-size: 22px;
+  max-width: 720px;
+  margin: -20px 0 60px;
+  color: var(--fg-dim);
+  line-height: 1.5;
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+}
+
+/* ============ ABOUT ============ */
+.about-grid {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 80px;
+}
+@media (max-width: 880px) {
+  .about-grid { grid-template-columns: 1fr; gap: 50px; }
+}
+
+.about-copy .lede {
+  font-size: 28px;
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  line-height: 1.3;
+  margin-bottom: 32px;
+  font-weight: 400;
+}
+.about-copy p {
+  font-size: 17px;
+  margin-bottom: 18px;
+  color: var(--fg-dim);
+  max-width: 560px;
+}
+
+/* Console window */
+.console {
+  border: 1px solid var(--line-bright);
+  background: rgba(7, 6, 13, 0.85);
+  margin-bottom: 40px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+.console-chrome {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  background: rgba(28, 24, 56, 0.6);
+  border-bottom: 1px solid var(--line);
+}
+.console-dots { display: flex; gap: 6px; }
+.console-dots span {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--fg-faint);
+  opacity: 0.5;
+}
+.console-dots span:nth-child(1) { background: var(--crimson); }
+.console-dots span:nth-child(2) { background: var(--ochre); }
+.console-dots span:nth-child(3) { background: oklch(60% 0.10 165); }
+.console-title {
+  font-size: 11px;
+  color: var(--fg-faint);
+  letter-spacing: 0.08em;
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 32px;
+}
+.console-body {
+  padding: 22px 20px 26px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.console-line { display: block; }
+.console-prompt { color: var(--terracotta); }
+.console-sep { color: var(--fg-faint); }
+.console-path { color: var(--ochre); }
+.console-cmd { color: var(--fg-dim); }
+.console-out {
+  margin-top: 8px;
+  font-size: 18px;
+  color: var(--fg);
+}
+.caret {
+  display: inline-block;
+  margin-left: 4px;
+  color: var(--accent);
+  animation: blink 1s steps(2, end) infinite;
+}
+.caret-done { animation: blink 1.2s steps(2, end) infinite; }
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.interests {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.interest-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: baseline;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 17px;
+  transition: padding-left 0.25s ease;
+}
+.interest-row:hover {
+  padding-left: 6px;
+}
+.interest-row:hover .glyph { color: var(--accent); }
+.interest-row .glyph {
+  color: var(--fg-faint);
+  font-size: 18px;
+  transition: color 0.25s;
+}
+.interest-row .ies {
+  color: var(--fg-faint);
+  font-size: 15px;
+}
+
+/* ============ IMAGE SLOT ============ */
+.img-slot {
+  position: relative;
+  width: 100%;
+  background: linear-gradient(135deg, rgba(28, 24, 56, 0.4), rgba(13, 11, 26, 0.6));
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.img-slot-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Defaults: cover-fit, centered. Individual projects override these
+     per-image via inline style — Wall Volleyball anchors `left` to keep
+     the sidebar in frame, phone-screenshot projects use `contain` so
+     the whole phone shows with letterboxing instead of getting cropped. */
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+/* Multi-image variant — N images side by side in equal-width columns
+   with a small gap, used for app projects that show two screenshots
+   together. Cells use object-fit:cover by default; the per-image
+   inline style still applies. */
+.img-slot-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 8px;
+}
+.img-slot-img-cell {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.img-slot-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.img-slot-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--slot-accent, var(--terracotta));
+  opacity: 0.7;
+}
+.img-slot-corner.tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+.img-slot-corner.tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+.img-slot-corner.bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+.img-slot-corner.br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+.img-slot-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--fg-faint);
+  text-align: center;
+  padding: 8px 16px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ============ CODE PROJECTS ============ */
+.projects-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 60px;
+  align-items: start;
+}
+@media (max-width: 1024px) {
+  .projects-layout { grid-template-columns: 1fr; gap: 40px; }
+}
+
+.project-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line-bright);
+}
+.proj-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 4px;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 20px;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  transition: padding-left 0.3s ease;
+}
+.proj-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 1px;
+  background: var(--row-accent);
+  transition: width 0.3s ease;
+}
+.proj-row.active {
+  padding-left: 32px;
+}
+.proj-row.active::before {
+  width: 22px;
+}
+.proj-row.active .proj-name { color: var(--row-accent); }
+.proj-row:hover { background: rgba(244, 234, 216, 0.02); }
+
+.proj-num { font-size: 11px; color: var(--fg-faint); letter-spacing: 0.1em; }
+.proj-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 28px;
+  font-weight: 400;
+  transition: color 0.25s;
+}
+.proj-year { font-size: 11px; color: var(--fg-faint); }
+
+.project-detail {
+  position: sticky;
+  top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  animation: fade-in 0.4s ease;
+}
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.proj-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+.proj-title {
+  font-size: 42px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+.proj-blurb {
+  color: var(--fg-dim);
+  font-size: 17px;
+  max-width: 600px;
+}
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  padding: 6px 12px;
+  border: 1px solid var(--line-bright);
+  border-radius: 999px;
+  color: var(--fg-dim);
+  text-transform: uppercase;
+}
+
+/* ============ ROBOTICS ============ */
+.robotics {
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(28, 24, 56, 0.3) 50%, transparent 100%);
+}
+.robotics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 32px;
+}
+.bot-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  background: rgba(13, 11, 26, 0.4);
+  backdrop-filter: blur(4px);
+  transition: border-color 0.3s, transform 0.3s;
+}
+.bot-card:hover {
+  border-color: var(--card-accent);
+  transform: translateY(-3px);
+}
+.bot-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+.bot-card-head .pill {
+  padding: 4px 10px;
+  border: 1px solid var(--card-accent);
+  border-radius: 999px;
+  color: var(--card-accent);
+  font-size: 10px;
+}
+.bot-title {
+  font-size: 28px;
+  font-weight: 400;
+  font-family: 'Instrument Serif', serif;
+}
+.bot-blurb {
+  font-size: 15px;
+  color: var(--fg-dim);
+  line-height: 1.55;
+}
+.bot-specs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 0;
+  border-top: 1px dashed var(--line);
+  border-bottom: 1px dashed var(--line);
+}
+.spec-line {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  align-items: center;
+}
+.spec-bullet {
+  color: var(--card-accent);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ============ EXPERIENCE ============ */
+.timeline {
+  display: flex;
+  flex-direction: column;
+}
+.tl-row {
+  display: grid;
+  grid-template-columns: 200px 40px 1fr;
+  gap: 24px;
+  padding: 28px 0;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  .tl-row { grid-template-columns: 30px 1fr; }
+  .tl-when { grid-column: 2; font-size: 12px; }
+}
+.tl-when {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--fg-faint);
+  padding-top: 4px;
+}
+.tl-track {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+.tl-node {
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  background: var(--ink);
+  margin-top: 6px;
+  z-index: 2;
+  position: relative;
+}
+.tl-node::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.tl-line {
+  position: absolute;
+  top: 18px;
+  bottom: -28px;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--line-bright), var(--line));
+}
+.tl-role {
+  font-family: 'Instrument Serif', serif;
+  font-size: 26px;
+  font-weight: 400;
+}
+.tl-co {
+  font-size: 14px;
+  margin-top: 6px;
+  color: var(--fg);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tl-notes {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--fg-dim);
+  margin-top: 10px;
+  line-height: 1.6;
+}
+
+/* ============ CONTACT ============ */
+.contact {
+  padding: 160px 0 60px;
+}
+.contact-headline {
+  font-size: clamp(56px, 9vw, 140px);
+  font-weight: 400;
+  margin: 32px 0 24px;
+  line-height: 0.92;
+}
+.contact-headline .line { display: block; }
+.contact-sub {
+  font-size: 18px;
+  max-width: 600px;
+  color: var(--fg-dim);
+  margin-bottom: 60px;
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 80px;
+}
+.contact-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 6px 0;
+  align-items: center;
+  padding: 24px 28px;
+  border: 1px solid var(--line);
+  background: rgba(13, 11, 26, 0.4);
+  transition: all 0.25s ease;
+}
+.contact-card:hover {
+  border-color: var(--accent);
+  background: rgba(244, 234, 216, 0.02);
+  transform: translateY(-2px);
+}
+.contact-card:hover .cc-arrow { transform: translateX(4px); color: var(--accent); }
+.cc-label {
+  grid-column: 1;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--fg-faint);
+}
+.cc-value {
+  grid-column: 1;
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+}
+.cc-arrow {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  font-size: 22px;
+  color: var(--fg-dim);
+  transition: all 0.25s;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 40px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--fg-dim);
+}
