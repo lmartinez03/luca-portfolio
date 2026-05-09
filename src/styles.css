@@ -37,11 +37,9 @@
   from { transform: scaleY(0.85) scaleX(1.05); opacity: 0.85; }
   to   { transform: scaleY(1.10) scaleX(0.92); opacity: 1.00; }
 }
-/* On narrow screens drop the rocket entirely — saves the rAF + canvas
-   work and avoids it crowding the stacked mobile layout. */
-@media (max-width: 720px) {
-  .rocket-trail, .rocket-ship { display: none; }
-}
+/* Rocket roams on mobile too — kept the rAF + canvas running across all
+   viewports. The orbital path math uses scrollHeight + viewport size, so
+   it adapts naturally to the narrower stacked layout. */
 
 /* ============ MARS DIVIDER ============
    Rubber-hose-cartoon rover + helicopter "driving" between sections.
@@ -153,6 +151,11 @@ p { line-height: 1.6; color: var(--fg); }
   display: flex;
   justify-content: space-between;
   align-items: center;
+  /* Minimum gap between SYS · ONLINE and the time so they always have
+     visible breathing room — and `flex-wrap: wrap` so on very narrow
+     phones they drop to two lines instead of crowding. */
+  gap: 24px;
+  flex-wrap: wrap;
   padding-top: 28px;
   padding-bottom: 28px;
   font-size: 11px;
@@ -230,7 +233,9 @@ p { line-height: 1.6; color: var(--fg); }
     transform: none;
     order: 1;
     width: min(420px, 90vw);
-    margin: 24px auto 16px;
+    /* Tight margins on mobile so there's no dead space between the
+       HUD frame above and the orbit-deck. */
+    margin: 0 auto;
     opacity: 0.85;
   }
 }
@@ -257,8 +262,26 @@ p { line-height: 1.6; color: var(--fg); }
   opacity: 0.85;
   pointer-events: none; /* purely decorative — don't intercept clicks */
 }
-@media (max-width: 880px) {
-  .planet-deck { right: -45%; opacity: 0.4; }
+/* Mobile / narrow viewports: same treatment as the hero's orbit-deck —
+   make the experience section a flex column, drop the planet-deck out
+   of absolute positioning, and push it under the timeline with order:1
+   so the moons + planet show up on phone instead of being hidden off
+   the side. */
+@media (max-width: 1100px) {
+  .section.experience {
+    display: flex;
+    flex-direction: column;
+  }
+  .planet-deck {
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    order: 1;
+    width: min(420px, 90vw);
+    margin: 24px auto 0;
+    opacity: 0.85;
+  }
 }
 
 .hero-grid {
@@ -271,7 +294,10 @@ p { line-height: 1.6; color: var(--fg); }
   padding-bottom: 60px;
 }
 @media (max-width: 1100px) {
-  .hero-grid { grid-template-columns: 1fr; gap: 40px; padding-top: 60px; }
+  /* Smaller grid gap + reduced top padding on mobile so the meta panel,
+     title, HUD frame, and orbit-deck stack tightly without dead space
+     between them. */
+  .hero-grid { grid-template-columns: 1fr; gap: 24px; padding-top: 28px; }
 }
 
 .hero-meta { display: flex; flex-direction: column; gap: 18px; }
@@ -379,6 +405,11 @@ p { line-height: 1.6; color: var(--fg); }
   padding: 140px 0;
   position: relative;
   z-index: 2;
+}
+/* Tighter section padding on mobile so consecutive sections don't
+   sit miles apart when the layout collapses to a single column. */
+@media (max-width: 720px) {
+  .section { padding: 64px 0; }
 }
 .section-head {
   display: flex;
