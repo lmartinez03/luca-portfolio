@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Same rocket silhouette as the one wandering the page, centered
+       inside a 32x32 favicon viewport. Flame, body, window, fins. -->
+  <g transform="translate(16, 14) scale(0.6)">
+    <!-- exhaust flame -->
+    <path d="M -3 16 Q -2 22 0 24 Q 2 22 3 16 Z" fill="#d4a23c" />
+    <!-- body -->
+    <path d="M 0 -22 C 8 -14 8 8 6 16 L -6 16 C -8 8 -8 -14 0 -22 Z"
+      fill="#f4ead8" stroke="#1a1a1a" stroke-width="2" />
+    <!-- porthole window -->
+    <circle cx="0" cy="-4" r="3.5" fill="#4f8fc7" stroke="#1a1a1a" stroke-width="1.5" />
+    <!-- left fin -->
+    <path d="M -6 6 L -12 18 L -6 16 Z" fill="#c87a5c" stroke="#1a1a1a" stroke-width="1.5" />
+    <!-- right fin -->
+    <path d="M  6 6 L  12 18 L  6 16 Z" fill="#b3503e" stroke="#1a1a1a" stroke-width="1.5" />
+  </g>
+</svg>
