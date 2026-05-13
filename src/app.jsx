@@ -547,7 +547,7 @@ function Hero() {
           </h1>
 
           <p className="hero-sub">
-            I'm <strong>Luca Martinez</strong> — <em>Frontend Developer</em>, App & Website
+            I'm <strong>Luca Martinez</strong> a <em>Frontend Developer</em>, App & Website
             Maker, <em>Robotics Engineer</em> end-to-end (think, schematic, code, build, test),
             full-time Creative.
           </p>
