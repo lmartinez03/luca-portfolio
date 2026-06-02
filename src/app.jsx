@@ -895,7 +895,54 @@ function CodeProjects() {
  * inline). Each card colors its border / accents from `--card-accent`,
  * a CSS custom property set per-card from ACCENT_HEX.
  */
+/** A single robotics build card — shared by the desktop grid and the mobile
+ *  carousel so the markup stays in one place. */
+function BotCard({ p }) {
+  return (
+    <article className="bot-card" style={{ '--card-accent': ACCENT_HEX[p.accent] }}>
+      <div className="bot-card-head">
+        <span className="mono dim">{p.tag} · {p.year}</span>
+        <span className="mono pill">{p.award}</span>
+      </div>
+      <ImageSlot label={`${p.name.toUpperCase()} — photo`} ratio="4 / 3" accent={p.accent} src={p.image} imageObjectPosition={p.imageObjectPosition} />
+      <h3 className="bot-title">{p.name}</h3>
+      <p className="bot-blurb">{p.blurb}</p>
+      <div className="bot-specs">
+        {p.specs.map((s) =>
+        <div key={s} className="spec-line">
+            <span className="spec-bullet">▸</span>
+            <span className="mono">{s}</span>
+          </div>
+        )}
+      </div>
+      <div className="stack">
+        {p.stack.map((s) => <span key={s} className="chip mono">{s}</span>)}
+      </div>
+    </article>);
+
+}
+
 function RoboticsProjects() {
+  // Mobile carousel state. `index` is unbounded — we modulo into the array so
+  // the arrows / swipe loop forever in either direction. `dir` drives which
+  // way the slide-in animation comes from.
+  const [index, setIndex] = useState(0);
+  const [dir, setDir] = useState(1);
+  const n = ROBOTICS_PROJECTS.length;
+  const active = ROBOTICS_PROJECTS[((index % n) + n) % n];
+  const step = (d) => { setDir(d); setIndex((v) => v + d); };
+
+  // Swipe: compare touch start/end X; a horizontal drag past the threshold
+  // steps the carousel (left → next, right → prev).
+  const touchX = useRef(null);
+  const onTouchStart = (e) => { touchX.current = e.touches[0].clientX; };
+  const onTouchEnd = (e) => {
+    if (touchX.current == null) return;
+    const dx = e.changedTouches[0].clientX - touchX.current;
+    touchX.current = null;
+    if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
+  };
+
   return (
     <section id="robotics" className="section robotics" data-screen-label="05 Robotics">
       <div className="container">
@@ -909,27 +956,18 @@ function RoboticsProjects() {
           Things I built with my hands, an Arduino, and probably too many late nights in the engineering lab.
         </p>
 
+        {/* Desktop: full grid of all builds. */}
         <div className="robotics-grid">
-          {ROBOTICS_PROJECTS.map((p, i) =>
-          <article key={p.id} className="bot-card" style={{ '--card-accent': ACCENT_HEX[p.accent] }}>
-              <div className="bot-card-head">
-                <span className="mono dim">{p.tag} · {p.year}</span>
-                <span className="mono pill">{p.award}</span>
-              </div>
-              <ImageSlot label={`${p.name.toUpperCase()} — photo`} ratio="4 / 3" accent={p.accent} src={p.image} imageObjectPosition={p.imageObjectPosition} />
-              <h3 className="bot-title">{p.name}</h3>
-              <p className="bot-blurb">{p.blurb}</p>
-              <div className="bot-specs">
-                {p.specs.map((s) => <div key={s} className="spec-line">
-                  <span className="spec-bullet">▸</span>
-                  <span className="mono">{s}</span>
-                </div>)}
-              </div>
-              <div className="stack">
-                {p.stack.map((s) => <span key={s} className="chip mono">{s}</span>)}
-              </div>
-            </article>
-          )}
+          {ROBOTICS_PROJECTS.map((p) => <BotCard key={p.id} p={p} />)}
+        </div>
+
+        {/* Mobile: one full-size card at a time, looping forever via arrows or swipe. */}
+        <div className="bot-carousel" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+          <button className="bot-arrow prev" onClick={() => step(-1)} aria-label="Previous build">‹</button>
+          <div className="bot-slide" key={index} data-dir={dir}>
+            <BotCard p={active} />
+          </div>
+          <button className="bot-arrow next" onClick={() => step(1)} aria-label="Next build">›</button>
         </div>
       </div>
     </section>);

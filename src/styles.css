@@ -930,30 +930,51 @@ p { line-height: 1.6; color: var(--fg); }
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* Mobile: turn the stacked robotics cards into a horizontal swipe carousel.
-   Full-bleed (negative margins cancel the 24px container padding) with
-   scroll-snap so each card snaps into place; the next card peeks at the
-   right edge to signal there's more to swipe. Native touch scroll — no JS. */
+/* The mobile carousel is hidden on desktop (the grid is used there). */
+.bot-carousel { display: none; }
+
+/* Mobile: show one full-size card at a time with orange side arrows; the
+   index loops forever (see RoboticsProjects). Desktop grid is hidden here. */
 @media (max-width: 720px) {
-  .robotics-grid {
+  .robotics-grid { display: none; }
+  .bot-carousel { display: block; position: relative; }
+  .bot-carousel .bot-card { width: 100%; }
+  /* No hover-lift on touch (sticky :hover would linger after a tap). */
+  .bot-carousel .bot-card:hover { transform: none; border-color: var(--line); }
+
+  /* Slide-in on each step; direction follows the arrow/swipe. */
+  .bot-slide { animation: bot-slide-r 0.32s ease; }
+  .bot-slide[data-dir="-1"] { animation-name: bot-slide-l; }
+
+  .bot-arrow {
+    position: absolute;
+    /* Fixed offset lands on the image (which sits a consistent distance from
+       the card top) rather than over the title, regardless of card height. */
+    top: 150px;
+    transform: translateY(-50%);
+    z-index: 6;
+    width: 42px;
+    height: 42px;
     display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding-left: 24px;
-    gap: 16px;
-    margin: 0 -24px;
-    padding: 4px 24px 18px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    background: rgba(20, 15, 30, 0.85); /* fallback */
+    background: color-mix(in oklch, var(--accent) 22%, rgba(7, 6, 13, 0.8));
+    color: var(--accent);
+    font-size: 22px;
+    line-height: 1;
+    padding: 0 0 3px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
-  .robotics-grid::-webkit-scrollbar { display: none; } /* WebKit */
-  .bot-card {
-    flex: 0 0 84%;
-    scroll-snap-align: start;
-  }
-  /* No hover-lift on touch (sticky :hover would jump cards mid-swipe). */
-  .bot-card:hover { transform: none; border-color: var(--line); }
+  .bot-arrow.prev { left: 8px; }
+  .bot-arrow.next { right: 8px; }
+  .bot-arrow:active { background: var(--accent); color: #0d0b1a; }
 }
+@keyframes bot-slide-r { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes bot-slide-l { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: translateX(0); } }
 
 /* ============ EXPERIENCE ============ */
 .timeline {
