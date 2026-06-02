@@ -843,7 +843,7 @@ function CodeProjects() {
             onChange={(e) => setActive(Number(e.target.value))}
             aria-label="Select a project">
             {CODE_PROJECTS.map((p, i) =>
-            <option key={p.id} value={i}>{p.tag} · {p.name} · {p.year}</option>
+            <option key={p.id} value={i}>{p.name} · {p.year}</option>
             )}
           </select>
 
