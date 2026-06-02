@@ -930,6 +930,31 @@ p { line-height: 1.6; color: var(--fg); }
   font-family: 'JetBrains Mono', monospace;
 }
 
+/* Mobile: turn the stacked robotics cards into a horizontal swipe carousel.
+   Full-bleed (negative margins cancel the 24px container padding) with
+   scroll-snap so each card snaps into place; the next card peeks at the
+   right edge to signal there's more to swipe. Native touch scroll — no JS. */
+@media (max-width: 720px) {
+  .robotics-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 24px;
+    gap: 16px;
+    margin: 0 -24px;
+    padding: 4px 24px 18px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+  .robotics-grid::-webkit-scrollbar { display: none; } /* WebKit */
+  .bot-card {
+    flex: 0 0 84%;
+    scroll-snap-align: start;
+  }
+  /* No hover-lift on touch (sticky :hover would jump cards mid-swipe). */
+  .bot-card:hover { transform: none; border-color: var(--line); }
+}
+
 /* ============ EXPERIENCE ============ */
 .timeline {
   display: flex;
