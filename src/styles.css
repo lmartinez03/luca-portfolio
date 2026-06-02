@@ -996,7 +996,9 @@ p { line-height: 1.6; color: var(--fg); }
 }
 .contact-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+  /* min(100%, 440px) so the 440px floor never exceeds the viewport — on
+     phones the column shrinks to full width instead of overflowing. */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
   gap: 16px;
   margin-bottom: 80px;
 }
