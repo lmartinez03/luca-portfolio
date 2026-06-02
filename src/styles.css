@@ -948,9 +948,8 @@ p { line-height: 1.6; color: var(--fg); }
 
   .bot-arrow {
     position: absolute;
-    /* Fixed offset lands on the image (which sits a consistent distance from
-       the card top) rather than over the title, regardless of card height. */
-    top: 150px;
+    /* Vertically centered on the card, flanking its left/right sides. */
+    top: 50%;
     transform: translateY(-50%);
     z-index: 6;
     width: 42px;
@@ -959,19 +958,19 @@ p { line-height: 1.6; color: var(--fg); }
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    border: 1px solid var(--accent);
-    background: rgba(20, 15, 30, 0.85); /* fallback */
-    background: color-mix(in oklch, var(--accent) 22%, rgba(7, 6, 13, 0.8));
-    color: var(--accent);
+    border: none;
+    background: var(--accent); /* solid orange */
+    color: #0d0b1a;
     font-size: 22px;
     line-height: 1;
     padding: 0 0 3px;
     cursor: pointer;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
     -webkit-tap-highlight-color: transparent;
   }
   .bot-arrow.prev { left: 8px; }
   .bot-arrow.next { right: 8px; }
-  .bot-arrow:active { background: var(--accent); color: #0d0b1a; }
+  .bot-arrow:active { filter: brightness(1.12); }
 }
 @keyframes bot-slide-r { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes bot-slide-l { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: translateX(0); } }

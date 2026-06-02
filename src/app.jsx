@@ -932,17 +932,6 @@ function RoboticsProjects() {
   const active = ROBOTICS_PROJECTS[((index % n) + n) % n];
   const step = (d) => { setDir(d); setIndex((v) => v + d); };
 
-  // Swipe: compare touch start/end X; a horizontal drag past the threshold
-  // steps the carousel (left → next, right → prev).
-  const touchX = useRef(null);
-  const onTouchStart = (e) => { touchX.current = e.touches[0].clientX; };
-  const onTouchEnd = (e) => {
-    if (touchX.current == null) return;
-    const dx = e.changedTouches[0].clientX - touchX.current;
-    touchX.current = null;
-    if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
-  };
-
   return (
     <section id="robotics" className="section robotics" data-screen-label="05 Robotics">
       <div className="container">
@@ -961,8 +950,8 @@ function RoboticsProjects() {
           {ROBOTICS_PROJECTS.map((p) => <BotCard key={p.id} p={p} />)}
         </div>
 
-        {/* Mobile: one full-size card at a time, looping forever via arrows or swipe. */}
-        <div className="bot-carousel" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+        {/* Mobile: one full-size card at a time, looping forever via the arrows. */}
+        <div className="bot-carousel">
           <button className="bot-arrow prev" onClick={() => step(-1)} aria-label="Previous build">‹</button>
           <div className="bot-slide" key={index} data-dir={dir}>
             <BotCard p={active} />
