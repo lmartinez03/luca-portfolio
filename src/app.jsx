@@ -835,6 +835,18 @@ function CodeProjects() {
         <SectionTitle>The build log.</SectionTitle>
 
         <div className="projects-layout">
+          {/* Mobile: the long row list is awkward to scroll past, so swap it
+              for a compact dropdown (hidden on desktop via CSS). */}
+          <select
+            className="proj-select mono"
+            value={active}
+            onChange={(e) => setActive(Number(e.target.value))}
+            aria-label="Select a project">
+            {CODE_PROJECTS.map((p, i) =>
+            <option key={p.id} value={i}>{p.tag} · {p.name} · {p.year}</option>
+            )}
+          </select>
+
           <div className="project-list">
             {CODE_PROJECTS.map((p, i) =>
             <button
@@ -842,7 +854,7 @@ function CodeProjects() {
               className={`proj-row ${i === active ? 'active' : ''}`}
               onClick={() => setActive(i)}
               style={{ '--row-accent': ACCENT_HEX[p.accent] }}>
-              
+
                 <span className="proj-num mono">{p.tag}</span>
                 <span className="proj-name">{p.name}</span>
                 <span className="proj-year mono">{p.year}</span>
