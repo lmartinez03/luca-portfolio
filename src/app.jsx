@@ -13,6 +13,7 @@ import portfolioImage from './images/PortfolioWebsite.png';
 import mechatronicsImage from './images/Mechatronics.jpg';
 import voiceZapImage from './images/VoiceZap.jpg';
 import reactionTimerImage from './images/ReactionTimer.jpg';
+import meImage from './images/Me.jpg';
 
 /* ============ DATA ============
  *
@@ -345,6 +346,14 @@ function SectionLabel({ num, children }) {
 
 }
 
+/**
+ * The large editorial heading that sits under a SectionLabel — set in the
+ * Instrument Serif italic used by the hero/ledes (e.g. "The operator.").
+ */
+function SectionTitle({ children }) {
+  return <h2 className="section-title">{children}</h2>;
+}
+
 /* ---------- Hero ----------
  * The landing section. Two pieces of light interactivity:
  *   1. A live EST clock in the top-right status bar (updates every second).
@@ -392,9 +401,9 @@ function Hero() {
         </div>
         <nav className="hero-nav">
           <a href="#about" className="mono">01 About</a>
-          <a href="#code" className="mono">02 Code</a>
-          <a href="#robotics" className="mono">03 Robotics</a>
-          <a href="#experience" className="mono">04 Experience</a>
+          <a href="#experience" className="mono">02 Experience</a>
+          <a href="#code" className="mono">03 Code</a>
+          <a href="#robotics" className="mono">04 Robotics</a>
           <a href="#contact" className="mono">05 Contact</a>
         </nav>
         <div className="status-right mono">{est}</div>
@@ -694,6 +703,13 @@ function About() {
     <section id="about" className="section about" data-screen-label="02 About">
       <div className="container">
         <SectionLabel num="01 /">ABOUT THE OPERATOR</SectionLabel>
+        <SectionTitle>The operator.</SectionTitle>
+        <figure className="operator-id">
+          <div className="operator-photo">
+            <img src={meImage} alt="Luca Martinez" />
+          </div>
+          <figcaption className="operator-id-cap mono">LM-2003 · OPERATOR</figcaption>
+        </figure>
         <div className="about-grid">
           <div className="about-copy">
             <p className="lede">
@@ -810,12 +826,13 @@ function CodeProjects() {
   const proj = CODE_PROJECTS[active];
 
   return (
-    <section id="code" className="section projects" data-screen-label="03 Code">
+    <section id="code" className="section projects" data-screen-label="04 Code">
       <div className="container">
         <div className="section-head">
-          <SectionLabel num="02 /">CODING PROJECTS</SectionLabel>
+          <SectionLabel num="03 /">CODING PROJECTS</SectionLabel>
           <div className="mono dim section-meta">{String(active + 1).padStart(2, '0')} / {String(CODE_PROJECTS.length).padStart(2, '0')}</div>
         </div>
+        <SectionTitle>The build log.</SectionTitle>
 
         <div className="projects-layout">
           <div className="project-list">
@@ -868,12 +885,13 @@ function CodeProjects() {
  */
 function RoboticsProjects() {
   return (
-    <section id="robotics" className="section robotics" data-screen-label="04 Robotics">
+    <section id="robotics" className="section robotics" data-screen-label="05 Robotics">
       <div className="container">
         <div className="section-head">
-          <SectionLabel num="03 /">ROBOTICS · HARDWARE</SectionLabel>
+          <SectionLabel num="04 /">ROBOTICS · HARDWARE</SectionLabel>
           <div className="mono dim section-meta">{ROBOTICS_PROJECTS.length} BUILDS</div>
         </div>
+        <SectionTitle>Circuits & servos.</SectionTitle>
 
         <p className="section-lede">
           Things I built with my hands, an Arduino, and probably too many late nights in the engineering lab.
@@ -1073,13 +1091,14 @@ function PlanetDeck() {
  */
 function Experience() {
   return (
-    <section id="experience" className="section experience" data-screen-label="05 Experience">
+    <section id="experience" className="section experience" data-screen-label="03 Experience">
       <PlanetDeck />
       <div className="container">
         <div className="section-head">
-          <SectionLabel num="04 /">FLIGHT LOG</SectionLabel>
+          <SectionLabel num="02 /">FLIGHT LOG</SectionLabel>
           <div className="mono dim section-meta">EXPERIENCE · EDUCATION</div>
         </div>
+        <SectionTitle>The flight path.</SectionTitle>
 
         <div className="timeline">
           {EXPERIENCE.map((e, i) =>
@@ -1134,7 +1153,7 @@ function Contact() {
           </a>
           <a className="contact-card" href="tel:+12032909902">
             <div className="cc-label mono">PHONE</div>
-            <div className="cc-value">+1 · 203 · 290 · 9902</div>
+            <div className="cc-value">+1·203·290·9902</div>
             <div className="cc-arrow">→</div>
           </a>
           <a className="contact-card" href="https://www.linkedin.com/in/lucamartinez2003/" target="_blank" rel="noopener noreferrer">
@@ -1877,11 +1896,11 @@ function App() {
       <MarsDivider />
       <About />
       <MarsDivider />
+      <Experience />
+      <MarsDivider />
       <CodeProjects />
       <MarsDivider />
       <RoboticsProjects />
-      <MarsDivider />
-      <Experience />
       <MarsDivider />
       <Contact />
       {t && window.TweaksPanel &&
