@@ -114,8 +114,8 @@
   .mars-divider {
     max-width: 280px;
     height: 70px;
-    margin-top: -20px;
-    margin-bottom: -20px;
+    margin-top: -6px;
+    margin-bottom: -6px;
   }
 }
 
@@ -243,13 +243,10 @@ p { line-height: 1.6; color: var(--fg); }
     width: min(420px, 90vw);
     /* Negative top/bottom margins crop the empty space inside the square
        SVG (the ISS sits centered with ~120px of dead space above/below it),
-       so it tucks close under the HUD frame instead of floating far below. */
-    margin: -80px auto -60px;
+       so it tucks closer under the HUD frame instead of floating far below. */
+    margin: -40px auto -60px;
     opacity: 0.85;
   }
-  /* The vertical "MISSION-LOG · 2026" text is a side decoration on desktop;
-     stacked on mobile it just adds ~200px of dead vertical space. */
-  .vert-text { display: none; }
 }
 
 /* Planet deck — anchored inside the Experience section, mirroring how
@@ -392,6 +389,18 @@ p { line-height: 1.6; color: var(--fg); }
   letter-spacing: 0.4em;
   color: var(--fg-faint);
   text-transform: uppercase;
+}
+/* On mobile the hero stacks, so the vertical side text would eat ~200px of
+   dead height. Lay it flat as a small centered label between the HUD frame
+   and the ISS. (Placed after the base rule so it wins the cascade.) */
+@media (max-width: 1100px) {
+  .hero-side { align-items: stretch; }
+  .vert-text {
+    writing-mode: horizontal-tb;
+    text-align: center;
+    letter-spacing: 0.3em;
+    margin-top: 24px;
+  }
 }
 
 .hero-bottom {
