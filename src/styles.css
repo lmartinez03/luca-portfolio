@@ -241,11 +241,15 @@ p { line-height: 1.6; color: var(--fg); }
     transform: none;
     order: 1;
     width: min(420px, 90vw);
-    /* Tight margins on mobile so there's no dead space between the
-       HUD frame above and the orbit-deck. */
-    margin: 0 auto;
+    /* Negative top/bottom margins crop the empty space inside the square
+       SVG (the ISS sits centered with ~120px of dead space above/below it),
+       so it tucks close under the HUD frame instead of floating far below. */
+    margin: -80px auto -60px;
     opacity: 0.85;
   }
+  /* The vertical "MISSION-LOG · 2026" text is a side decoration on desktop;
+     stacked on mobile it just adds ~200px of dead vertical space. */
+  .vert-text { display: none; }
 }
 
 /* Planet deck — anchored inside the Experience section, mirroring how
@@ -305,7 +309,7 @@ p { line-height: 1.6; color: var(--fg); }
   /* Smaller grid gap + reduced top padding on mobile so the meta panel,
      title, HUD frame, and orbit-deck stack tightly without dead space
      between them. */
-  .hero-grid { grid-template-columns: 1fr; gap: 24px; padding-top: 28px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 24px; padding-top: 28px; padding-bottom: 16px; }
 }
 
 .hero-meta { display: flex; flex-direction: column; gap: 18px; }
