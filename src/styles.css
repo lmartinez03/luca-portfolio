@@ -310,6 +310,12 @@ p { line-height: 1.6; color: var(--fg); }
 }
 
 .hero-meta { display: flex; flex-direction: column; gap: 18px; }
+/* Hide the CALL SIGN / N° / LOC / LANG meta panel on mobile — its info is
+   already covered by the hero copy and HUD frame. (After the base rule so it
+   wins the cascade.) */
+@media (max-width: 880px) {
+  .hero-meta { display: none; }
+}
 .hero-meta-item {
   display: flex; gap: 14px;
   font-size: 11px;
