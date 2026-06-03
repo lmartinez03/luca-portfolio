@@ -1,6 +1,6 @@
 ﻿// Luca Martinez — Portfolio App
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import wallVBImage from './images/WallVB.png';
 import rfsImage from './images/RFS.png';
 import remindersImage from './images/RemindersCleaner.jpg';
@@ -928,14 +928,35 @@ function RoboticsProjects() {
   // rotation; during a drag we write the transform straight to the DOM via
   // prismRef for smoothness, then snap to the nearest face (multiple of 120°)
   // on release.
+  const sceneRef = useRef(null);
   const prismRef = useRef(null);
   const drag = useRef(null);
   const [angle, setAngle] = useState(0);
+  // Measured height of the tallest card. The faces are absolutely positioned,
+  // so the scene needs an explicit height; measuring keeps every photo + all
+  // the text fully visible (a fixed height would squish the image via flex).
+  const [prismH, setPrismH] = useState(null);
 
   // Apothem of the triangular cross-section = (faceWidth / 2) / tan(60°).
   // Face width is 80vw, so the radius is (40vw / tan60). translateZ(-radius)
   // on the prism keeps the front face centered on the screen plane.
   const transformFor = (a) => `translateZ(calc(-40vw / 1.7320508)) rotateY(${a}deg)`;
+  const applyTransform = (a) => { if (prismRef.current) prismRef.current.style.transform = transformFor(a); };
+
+  // Measure the tallest card up-front and on resize/orientation change.
+  useLayoutEffect(() => {
+    const measure = () => {
+      if (!sceneRef.current) return;
+      let max = 0;
+      sceneRef.current.querySelectorAll('.prism-face .bot-card').forEach((c) => {
+        max = Math.max(max, c.offsetHeight);
+      });
+      if (max) setPrismH(max);
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
 
   const onStart = (e) => {
     drag.current = { x: e.touches[0].clientX, base: angle, a: angle };
@@ -945,15 +966,22 @@ function RoboticsProjects() {
     if (!drag.current) return;
     const dx = e.touches[0].clientX - drag.current.x;
     drag.current.a = drag.current.base + dx * 0.5; // 0.5° per px
-    if (prismRef.current) prismRef.current.style.transform = transformFor(drag.current.a);
+    applyTransform(drag.current.a);
   };
   const onEnd = () => {
     if (!drag.current) return;
     const snapped = Math.round(drag.current.a / 120) * 120;
     drag.current = null;
+    // Restore the CSS transition, then write the snapped transform IMPERATIVELY
+    // so it always animates to a face — even when `snapped` equals the current
+    // state (React would otherwise skip the DOM update and leave it mid-spin).
     if (prismRef.current) prismRef.current.style.transition = '';
+    applyTransform(snapped);
     setAngle(snapped);
   };
+
+  // Small side arrows double as a drag hint and a tap-to-rotate control.
+  const rotate = (d) => setAngle((a) => a + d * 120);
 
   return (
     <section id="robotics" className="section robotics" data-screen-label="05 Robotics">
@@ -975,7 +1003,7 @@ function RoboticsProjects() {
 
         {/* Mobile: the three builds sit on the faces of a triangular prism;
             drag horizontally to rotate it. */}
-        <div className="bot-prism-scene">
+        <div className="bot-prism-scene" ref={sceneRef} style={prismH ? { height: prismH } : null}>
           <div
             className="bot-prism"
             ref={prismRef}
@@ -989,6 +1017,8 @@ function RoboticsProjects() {
               </div>
             )}
           </div>
+          <button className="prism-arrow prev" onClick={() => rotate(1)} aria-label="Rotate left">‹</button>
+          <button className="prism-arrow next" onClick={() => rotate(-1)} aria-label="Rotate right">›</button>
           <div className="prism-hint mono">⟲ drag to rotate</div>
         </div>
       </div>
