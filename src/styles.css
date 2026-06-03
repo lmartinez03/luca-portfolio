@@ -432,15 +432,15 @@ p { line-height: 1.6; color: var(--fg); }
   padding: 140px 0;
   position: relative;
   z-index: 2;
-  /* Negative scroll-margin-top so anchor links scroll PAST nearly all of the
-     140px top padding — the section's content (eyebrow/title) lands ~10px
-     from the top instead of with a big empty band above it. */
-  scroll-margin-top: -130px;
+  /* Negative scroll-margin-top so anchor links scroll past most of the 140px
+     top padding, leaving a comfortable ~60px gap above the section content
+     (not the full padding, not flush to the top). */
+  scroll-margin-top: -80px;
 }
 /* Tighter section padding on mobile so consecutive sections don't
    sit miles apart when the layout collapses to a single column. */
 @media (max-width: 720px) {
-  .section { padding: 64px 0; scroll-margin-top: -54px; }
+  .section { padding: 64px 0; scroll-margin-top: -32px; }
 }
 .section-head {
   display: flex;
