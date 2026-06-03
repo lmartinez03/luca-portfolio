@@ -432,12 +432,14 @@ p { line-height: 1.6; color: var(--fg); }
   padding: 140px 0;
   position: relative;
   z-index: 2;
-  scroll-margin-top: 80px;
+  /* No scroll-margin-top: anchor links (nav + "Get in Touch") scroll all the
+     way to the section top rather than stopping short with a gap above. */
+  scroll-margin-top: 0;
 }
 /* Tighter section padding on mobile so consecutive sections don't
    sit miles apart when the layout collapses to a single column. */
 @media (max-width: 720px) {
-  .section { padding: 64px 0; scroll-margin-top: 48px; }
+  .section { padding: 64px 0; }
 }
 .section-head {
   display: flex;
