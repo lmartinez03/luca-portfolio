@@ -442,6 +442,15 @@ p { line-height: 1.6; color: var(--fg); }
 @media (max-width: 720px) {
   .section { padding: 64px 0; scroll-margin-top: -32px; }
 }
+/* Per-section landing tweaks (ID beats .section, so these win and apply to
+   EVERY link targeting them — nav links AND the hero buttons alike):
+   About sits a little higher, Contact a little lower than the default. */
+#about   { scroll-margin-top: -100px; }
+#contact { scroll-margin-top: -60px; }
+@media (max-width: 720px) {
+  #about   { scroll-margin-top: -44px; }
+  #contact { scroll-margin-top: -20px; }
+}
 .section-head {
   display: flex;
   justify-content: space-between;
