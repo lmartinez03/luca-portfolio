@@ -936,50 +936,64 @@ p { line-height: 1.6; color: var(--fg); }
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* The mobile carousel is hidden on desktop (the grid is used there). */
-.bot-carousel { display: none; }
+/* The mobile prism is hidden on desktop (the grid is used there). */
+.bot-prism-scene { display: none; }
 
-/* Mobile: show one full-size card at a time with orange side arrows; the
-   index loops forever (see RoboticsProjects). Desktop grid is hidden here. */
+/* Mobile: the three builds live on the faces of a triangular prism the user
+   drags to rotate (see RoboticsProjects). Desktop grid is hidden here. */
 @media (max-width: 720px) {
   .robotics-grid { display: none; }
-  .bot-carousel { display: block; position: relative; }
-  .bot-carousel .bot-card { width: 100%; }
-  /* No hover-lift on touch (sticky :hover would linger after a tap). */
-  .bot-carousel .bot-card:hover { transform: none; border-color: var(--line); }
 
-  /* Slide-in on each step; direction follows the arrow/swipe. */
-  .bot-slide { animation: bot-slide-r 0.32s ease; }
-  .bot-slide[data-dir="-1"] { animation-name: bot-slide-l; }
-
-  .bot-arrow {
-    position: absolute;
-    /* Vertically centered on the card, flanking its left/right sides. */
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 6;
-    width: 42px;
-    height: 42px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    border: none;
-    background: var(--accent); /* solid orange */
-    color: #0d0b1a;
-    font-size: 22px;
-    line-height: 1;
-    padding: 0 0 3px;
-    cursor: pointer;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
-    -webkit-tap-highlight-color: transparent;
+  .bot-prism-scene {
+    display: block;
+    position: relative;
+    perspective: 1300px;
+    /* Fixed height ≈ the tallest card; faces are absolutely positioned so the
+       scene needs an explicit height. */
+    height: 580px;
+    margin-bottom: 36px;
+    touch-action: pan-y; /* let vertical page scroll through; we handle X */
   }
-  .bot-arrow.prev { left: 8px; }
-  .bot-arrow.next { right: 8px; }
-  .bot-arrow:active { filter: brightness(1.12); }
+  .bot-prism {
+    position: absolute;
+    left: 50%;
+    width: 80vw;
+    margin-left: -40vw;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .prism-face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    /* Each face turned 120° around and pushed out by the apothem so the three
+       meet at their vertical edges to form the prism. */
+    transform: rotateY(calc(var(--i) * 120deg)) translateZ(calc(40vw / 1.7320508));
+  }
+  .prism-face .bot-card {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: rgba(13, 11, 26, 0.92); /* opaque so faces behind don't bleed through */
+  }
+  .prism-face .bot-card:hover { transform: none; border-color: var(--line); }
+
+  .prism-hint {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -26px;
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+  }
 }
-@keyframes bot-slide-r { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: translateX(0); } }
-@keyframes bot-slide-l { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: translateX(0); } }
 
 /* ============ EXPERIENCE ============ */
 .timeline {

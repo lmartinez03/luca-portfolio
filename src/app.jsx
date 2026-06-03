@@ -923,14 +923,37 @@ function BotCard({ p }) {
 }
 
 function RoboticsProjects() {
-  // Mobile carousel state. `index` is unbounded — we modulo into the array so
-  // the arrows / swipe loop forever in either direction. `dir` drives which
-  // way the slide-in animation comes from.
-  const [index, setIndex] = useState(0);
-  const [dir, setDir] = useState(1);
-  const n = ROBOTICS_PROJECTS.length;
-  const active = ROBOTICS_PROJECTS[((index % n) + n) % n];
-  const step = (d) => { setDir(d); setIndex((v) => v + d); };
+  // Mobile only: the three cards live on the faces of a triangular prism the
+  // user rotates with a horizontal drag. `angle` is the committed (snapped)
+  // rotation; during a drag we write the transform straight to the DOM via
+  // prismRef for smoothness, then snap to the nearest face (multiple of 120°)
+  // on release.
+  const prismRef = useRef(null);
+  const drag = useRef(null);
+  const [angle, setAngle] = useState(0);
+
+  // Apothem of the triangular cross-section = (faceWidth / 2) / tan(60°).
+  // Face width is 80vw, so the radius is (40vw / tan60). translateZ(-radius)
+  // on the prism keeps the front face centered on the screen plane.
+  const transformFor = (a) => `translateZ(calc(-40vw / 1.7320508)) rotateY(${a}deg)`;
+
+  const onStart = (e) => {
+    drag.current = { x: e.touches[0].clientX, base: angle, a: angle };
+    if (prismRef.current) prismRef.current.style.transition = 'none';
+  };
+  const onMove = (e) => {
+    if (!drag.current) return;
+    const dx = e.touches[0].clientX - drag.current.x;
+    drag.current.a = drag.current.base + dx * 0.5; // 0.5° per px
+    if (prismRef.current) prismRef.current.style.transform = transformFor(drag.current.a);
+  };
+  const onEnd = () => {
+    if (!drag.current) return;
+    const snapped = Math.round(drag.current.a / 120) * 120;
+    drag.current = null;
+    if (prismRef.current) prismRef.current.style.transition = '';
+    setAngle(snapped);
+  };
 
   return (
     <section id="robotics" className="section robotics" data-screen-label="05 Robotics">
@@ -950,13 +973,23 @@ function RoboticsProjects() {
           {ROBOTICS_PROJECTS.map((p) => <BotCard key={p.id} p={p} />)}
         </div>
 
-        {/* Mobile: one full-size card at a time, looping forever via the arrows. */}
-        <div className="bot-carousel">
-          <button className="bot-arrow prev" onClick={() => step(-1)} aria-label="Previous build">‹</button>
-          <div className="bot-slide" key={index} data-dir={dir}>
-            <BotCard p={active} />
+        {/* Mobile: the three builds sit on the faces of a triangular prism;
+            drag horizontally to rotate it. */}
+        <div className="bot-prism-scene">
+          <div
+            className="bot-prism"
+            ref={prismRef}
+            style={{ transform: transformFor(angle) }}
+            onTouchStart={onStart}
+            onTouchMove={onMove}
+            onTouchEnd={onEnd}>
+            {ROBOTICS_PROJECTS.map((p, i) =>
+            <div key={p.id} className="prism-face" style={{ '--i': i }}>
+                <BotCard p={p} />
+              </div>
+            )}
           </div>
-          <button className="bot-arrow next" onClick={() => step(1)} aria-label="Next build">›</button>
+          <div className="prism-hint mono">⟲ drag to rotate</div>
         </div>
       </div>
     </section>);
