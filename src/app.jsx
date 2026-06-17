@@ -79,7 +79,7 @@ const CODE_PROJECTS = [
   name: 'Ready For School',
   role: 'Frontend Dev',
   stack: ['React', 'Vercel', 'Stripe'],
-  blurb: 'Two donor-facing production sites for an education non-profit, shipped quickly and tuned in prod. 40% faster page loads and 100+ recurring donor subscribers via Stripe + email-capture flows.',
+  blurb: 'My mom runs a non-profit for students in Peru. We were headed there just to visit family, with no plans to fundraise, until a month out she asked: what if we find a way to donate books? So I built two sites on React + Stripe, one for the non-profit and one for the fundraiser. We raised enough to give books, jackets, hoodies, backpacks, and school supplies to two schools in the Andes.',
   accent: 'ochre',
   year: 'Mar–Apr 2026',
   tag: 'PROD-003',
@@ -90,7 +90,7 @@ const CODE_PROJECTS = [
   name: 'Mimic',
   role: 'Computer Vision App',
   stack: ['React', 'MediaPipe', 'AI'],
-  blurb: 'Prototyped an AI movement coach for beach volleyball. Record yourself executing a skill, then play it side-by-side with a pro reference clip. MediaPipe pose-tracking overlays joint skeletons on both videos so you can see deltas frame-by-frame, with optional AI auto-analysis of the differences.',
+  blurb: 'I wanted to get better at beach volleyball, so I built a tool that compares your form to a pro\'s and tells you the difference. Record a skill, play it side-by-side with a pro clip, and MediaPipe pose-tracking overlays joint skeletons on both. The hard part was reading the angles: figuring out which joint differences meant which mistakes, then turning that into real advice like "get deeper on your jump, your knee angle was too high on the approach."',
   accent: 'crimson',
   year: 'Jan 2026',
   tag: 'APP-002',
@@ -115,7 +115,7 @@ const CODE_PROJECTS = [
   name: 'Beach Volleyball Stats',
   role: 'Data Analysis',
   stack: ['Python', 'Pandas', 'Matplotlib', 'Seaborn'],
-  blurb: 'Pulled 1,000+ match records from the Sports Devs API, built rate-limited scrapers, and generated 10+ visualizations to identify optimal serving strategies.',
+  blurb: 'Another way to get better at beach volleyball: I made it my final to find out whether serving aggressively actually pays off. Pulled 1,000+ match records from the Sports Devs API, built rate-limited scrapers, and generated 10+ visualizations comparing aggressive serving against win rates and aces. The findings genuinely improved my own game.',
   accent: 'jade',
   year: 'May 2025',
   tag: 'DATA-001',
@@ -159,7 +159,7 @@ const ROBOTICS_PROJECTS = [
   name: 'Reaction Time Trainer',
   award: 'Personal Build',
   stack: ['Arduino', 'C++', 'PVC Fab'],
-  blurb: 'A personal build: a 4-station reaction trainer. Reverse-engineered commercial arcade buttons to talk to an Arduino, fabbed a PVC housing, and logged runs across sessions so you can actually see yourself getting faster.',
+  blurb: 'I wanted to sharpen my reaction time for beach volleyball, so I bought a few arcade buttons, rewired them to a relay, and tied it all together with PVC pipe. A bored-in-college build that worked great: a 4-station trainer that logs your reaction time across sessions so you can see yourself getting faster.',
   accent: 'ochre',
   year: '2023',
   tag: 'BOT-003',
@@ -723,9 +723,9 @@ function About() {
             </p>
             <p>
               I build fast. <span className="terra">Prototype, test, iterate.</span> I'd rather ship
-              something rough and learn from real use than polish in a vacuum, because shipping is the
-              fastest way to find out what actually works. I move quick, test constantly, and turn what
-              I learn into working products.
+              something rough and learn from real use than keep perfecting it before anyone has tried
+              it, because shipping is the fastest way to find out what actually works. I move quick,
+              test constantly, and turn what I learn into working products.
             </p>
           </div>
 
