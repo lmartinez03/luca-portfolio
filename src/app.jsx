@@ -400,11 +400,11 @@ function Hero() {
           <span className="mono">SYS · ONLINE</span>
         </div>
         <nav className="hero-nav">
-          <a href="#about" className="mono">01 About</a>
-          <a href="#experience" className="mono">02 Experience</a>
-          <a href="#code" className="mono">03 Code</a>
-          <a href="#robotics" className="mono">04 Robotics</a>
-          <a href="#contact" className="mono">05 Contact</a>
+          <a href="#about" className="mono">01 | About</a>
+          <a href="#experience" className="mono">02 | Experience</a>
+          <a href="#code" className="mono">03 | Code</a>
+          <a href="#robotics" className="mono">04 | Robotics</a>
+          <a href="#contact" className="mono">05 | Contact</a>
         </nav>
         <div className="status-right mono">{est}</div>
       </div>
