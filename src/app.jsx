@@ -749,7 +749,8 @@ function About() {
               I build fast. <span className="terra">Prototype, test, iterate.</span> I'd rather ship
               something rough and learn from real use than keep perfecting it before anyone has tried
               it, because shipping is the fastest way to find out what actually works. I move quick,
-              test constantly, and turn what I learn into working products.
+              test constantly, and turn what I learn into working products. AI is a big part of how I
+              move this fast, a multiplier on top of knowing how to build it myself.
             </p>
           </div>
 
