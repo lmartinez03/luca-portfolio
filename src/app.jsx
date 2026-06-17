@@ -38,7 +38,7 @@ const CODE_PROJECTS = [
   name: 'Portfolio Website',
   role: 'Personal Site',
   stack: ['React', 'Vite', 'Vercel'],
-  blurb: 'This site. React + Vite on Vercel with a cosmic theme and ambient SVG/canvas motion. A rocket that wanders the page (and speeds away if you hover near it), an interactive ISS that drifts toward your cursor, animated rover dividers between sections, and an orbiting moon system in the Flight Log.',
+  blurb: 'This site — built fast and shipped on React + Vite + Vercel. A cosmic theme with ambient SVG/canvas motion: a rocket that wanders the page (and speeds away if you hover near it), an interactive ISS that drifts toward your cursor, animated rover dividers between sections, and an orbiting moon system in the Flight Log.',
   accent: 'terracotta',
   year: 'May 2026',
   tag: 'PROD-001',
@@ -49,7 +49,7 @@ const CODE_PROJECTS = [
   name: 'Wall Volleyball',
   role: 'Full-Stack Dev',
   stack: ['React', 'Vercel', 'AWS S3', 'Firebase', 'Stripe'],
-  blurb: 'Migrated 4 legacy WordPress sites to React, cutting infra cost 90%. Transferred 1,000+ training videos out of a legacy app into a scalable AWS S3 pipeline, then built the full e-commerce + customer dashboard flow on Stripe.',
+  blurb: 'Rebuilt 4 legacy WordPress sites in React, shipping iteratively to prod instead of waiting for a big-bang launch. Cut infra cost 90%, moved 1,000+ training videos into a scalable AWS S3 pipeline, and built the full e-commerce + customer dashboard flow on Stripe.',
   accent: 'terracotta',
   year: 'Feb–May 2026',
   tag: 'PROD-002',
@@ -61,7 +61,7 @@ const CODE_PROJECTS = [
   name: 'Forkd',
   role: 'Mobile App',
   stack: ['React Native', 'Expo', 'Firebase', 'Google AdMob'],
-  blurb: 'Restaurant-decision app: pulls nearby spots from your location, lets you filter by cuisine and dietary preferences, then spins a colorful wheel to pick. React Native + Expo for the client, Firebase for auth + user data, monetized via Google AdMob.',
+  blurb: 'Prototyped and shipped a restaurant-decision app: pulls nearby spots from your location, filters by cuisine and dietary preferences, then spins a colorful wheel to pick. React Native + Expo for the client, Firebase for auth + user data, monetized via Google AdMob.',
   accent: 'ochre',
   year: 'Apr 2026',
   tag: 'APP-001',
@@ -79,7 +79,7 @@ const CODE_PROJECTS = [
   name: 'Ready For School',
   role: 'Frontend Dev',
   stack: ['React', 'Vercel', 'Stripe'],
-  blurb: 'Two production donor-facing sites for an education non-profit. 40% faster page loads, 100+ recurring donor subscribers via Stripe + email capture flows.',
+  blurb: 'Two donor-facing production sites for an education non-profit — shipped quickly and tuned in prod. 40% faster page loads and 100+ recurring donor subscribers via Stripe + email-capture flows.',
   accent: 'ochre',
   year: 'Mar–Apr 2026',
   tag: 'PROD-003',
@@ -90,7 +90,7 @@ const CODE_PROJECTS = [
   name: 'Mimic',
   role: 'Computer Vision App',
   stack: ['React', 'MediaPipe', 'AI'],
-  blurb: 'AI movement coach for beach volleyball. Record yourself executing a skill, then play it side-by-side with a pro reference clip. MediaPipe pose-tracking overlays joint skeletons on both videos so you can see deltas frame-by-frame, with optional AI auto-analysis of the differences.',
+  blurb: 'Prototyped an AI movement coach for beach volleyball. Record yourself executing a skill, then play it side-by-side with a pro reference clip. MediaPipe pose-tracking overlays joint skeletons on both videos so you can see deltas frame-by-frame, with optional AI auto-analysis of the differences.',
   accent: 'crimson',
   year: 'Jan 2026',
   tag: 'APP-002',
@@ -101,7 +101,7 @@ const CODE_PROJECTS = [
   name: 'Reminders Cleaner',
   role: 'iOS App',
   stack: ['Flutter', 'Dart', 'iOS SDK'],
-  blurb: 'Tinder-style swipe interface for cleaning out the iOS Reminders database. Native SDK integration, 100+ reminders processed with zero data loss, themeable UI + onboarding.',
+  blurb: 'Built a Tinder-style swipe interface for cleaning out the iOS Reminders database. Native SDK integration, 100+ reminders processed with zero data loss, themeable UI + onboarding.',
   accent: 'crimson',
   year: 'Jul 2025',
   tag: 'APP-003',
@@ -115,7 +115,7 @@ const CODE_PROJECTS = [
   name: 'Beach Volleyball Stats',
   role: 'Data Analysis',
   stack: ['Python', 'Pandas', 'Matplotlib', 'Seaborn'],
-  blurb: 'Pulled 1000+ match records from Sports Devs API, built rate-limited scrapers, generated 10+ visualizations to identify optimal serving strategies.',
+  blurb: 'Pulled 1,000+ match records from the Sports Devs API, built rate-limited scrapers, and generated 10+ visualizations to identify optimal serving strategies.',
   accent: 'jade',
   year: 'May 2025',
   tag: 'DATA-001',
@@ -131,7 +131,7 @@ const ROBOTICS_PROJECTS = [
   name: 'Autonomous Maze Robot',
   award: 'Mechatronics - PLINKO',
   stack: ['C++', 'Arduino', 'Computer Vision', 'SolidWorks'],
-  blurb: 'Semester-long final. Navigates a maze, identifies and collects colored disks, drops them in correct bins. Sonar + state machine for smooth nav. 3D-printed and laser-cut custom chassis.',
+  blurb: 'A semester-long final I treated like a sprint — prototype a part, 3D-print it, test it that same night, repeat, every single day. While competitors built for perfection and tested only at the end, I validated each subsystem on its own and daily — and beat them. Navigates a maze, collects colored disks, and bins them with sonar + a state machine on a custom 3D-printed and laser-cut chassis.',
   accent: 'terracotta',
   year: '2024',
   tag: 'BOT-001',
@@ -147,7 +147,7 @@ const ROBOTICS_PROJECTS = [
   name: 'Voice-Activated Zap System',
   award: 'Summer Build',
   stack: ['Arduino', 'C++', 'Voice Rec', 'Relay', 'Taser'],
-  blurb: 'Voice-recognition shock system. Zaps friends when they say unknown keywords. 95% accuracy. Housed in a Frosted Flakes box. Friends learned to watch their language real quick.',
+  blurb: 'A summer build, made for the fun of it — a voice-recognition shock system that zaps friends when they say off-limits keywords. Hacked it together fast: 95% accuracy, relay-switched, housed in a Frosted Flakes box. Friends learned to watch their language real quick.',
   accent: 'crimson',
   year: '2023',
   tag: 'BOT-002',
@@ -159,7 +159,7 @@ const ROBOTICS_PROJECTS = [
   name: 'Reaction Time Trainer',
   award: 'Personal Build',
   stack: ['Arduino', 'C++', 'PVC Fab'],
-  blurb: '4-station reaction trainer. Reverse-engineered commercial buttons to interface with Arduino. PVC housing. Tracks across sessions so you can see if you\'re actually getting faster.',
+  blurb: 'A personal build: a 4-station reaction trainer. Reverse-engineered commercial arcade buttons to talk to an Arduino, fabbed a PVC housing, and logged runs across sessions so you can actually see yourself getting faster.',
   accent: 'ochre',
   year: '2023',
   tag: 'BOT-003',
@@ -722,9 +722,10 @@ function About() {
               e-commerce and donor sites, and teach kids how to code on the side.
             </p>
             <p>
-              I think the most interesting problems live where software meets the physical world:
-              a state machine deciding which way a robot should turn, a swipe gesture controlling
-              an iOS reminder, a keyword unlocking a relay. That's where I want to spend my time.
+              Mostly, I build fast. <span className="terra">Prototype, test, iterate</span> — I'd
+              rather ship something rough and learn from real use than polish in a vacuum, because
+              shipping is the fastest way to find out what actually works. It's a founder's mindset:
+              move quick, test constantly, and turn what I learn into working products.
             </p>
           </div>
 
