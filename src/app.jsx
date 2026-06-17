@@ -34,6 +34,17 @@ import meImage from './images/Me.jpg';
 // etc. Reordering this array means renumbering the tags too.
 const CODE_PROJECTS = [
 {
+  id: 'brainfuel',
+  name: 'Brainfuel',
+  role: 'In Progress',
+  stack: ['React Native', 'Expo'],
+  blurb: 'A work in progress, started this month. I wanted to figure out how to get people off their phones, so I am building an app blocker with a twist: to unblock an app, you have to play a quick mental game first. Just enough friction to make you think before you scroll.',
+  accent: 'jade',
+  year: 'Jun 2026',
+  tag: 'WIP-001',
+  wip: true
+},
+{
   id: 'portfolio',
   name: 'Portfolio Website',
   role: 'Personal Site',
@@ -42,7 +53,8 @@ const CODE_PROJECTS = [
   accent: 'terracotta',
   year: 'May 2026',
   tag: 'PROD-001',
-  image: portfolioImage
+  image: portfolioImage,
+  links: [{ label: 'Visit Site', url: 'https://www.lucaportfolio.space/' }]
 },
 {
   id: 'wall',
@@ -54,7 +66,8 @@ const CODE_PROJECTS = [
   year: 'Feb–May 2026',
   tag: 'PROD-002',
   image: wallVBImage,
-  imageObjectPosition: 'left center'
+  imageObjectPosition: 'left center',
+  links: [{ label: 'Visit Site', url: 'https://www.wallvolleyball.com/' }]
 },
 {
   id: 'forkd',
@@ -72,7 +85,8 @@ const CODE_PROJECTS = [
   // mostly uncropped under cover-fit.
   images: [forkdImage, forkdImage2],
   imageRatio: '1 / 1',
-  imageMaxWidth: '420px'
+  imageMaxWidth: '420px',
+  links: [{ label: 'App Store', url: 'https://apps.apple.com/us/app/forkd-where-should-i-eat/id6761272222' }]
 },
 {
   id: 'rfs',
@@ -83,7 +97,11 @@ const CODE_PROJECTS = [
   accent: 'ochre',
   year: 'Mar–Apr 2026',
   tag: 'PROD-003',
-  image: rfsImage
+  image: rfsImage,
+  links: [
+    { label: 'Non-profit', url: 'https://www.readyforschoolperu.org/' },
+    { label: 'Fundraiser', url: 'https://www.rfsfundraising.org/' }
+  ]
 },
 {
   id: 'mimic',
@@ -879,11 +897,29 @@ function CodeProjects() {
                 <span className="mono dim">{proj.tag} · {proj.year}</span>
                 <span className="mono" style={{ color: ACCENT_HEX[proj.accent] }}>● {proj.role}</span>
               </div>
-              <h3 className="proj-title">{proj.name}</h3>
+              <h3 className="proj-title">
+                {proj.name}
+                {proj.wip && <span className="wip-tag mono">Work in progress</span>}
+              </h3>
               <p className="proj-blurb">{proj.blurb}</p>
               <div className="stack">
                 {proj.stack.map((s) => <span key={s} className="chip mono">{s}</span>)}
               </div>
+              {proj.links &&
+              <div className="proj-links">
+                  {proj.links.map((l) =>
+                <a
+                  key={l.url}
+                  className="proj-link mono"
+                  href={l.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ '--lnk': ACCENT_HEX[proj.accent] }}>
+                      {l.label} ↗
+                    </a>
+                )}
+                </div>
+              }
             </div>
           </div>
         </div>

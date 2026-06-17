@@ -857,6 +857,46 @@ p { line-height: 1.6; color: var(--fg); }
   font-weight: 400;
   letter-spacing: -0.02em;
 }
+/* Small "work in progress" tag next to a project title. */
+.wip-tag {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 14px;
+  padding: 4px 10px;
+  border: 1px solid var(--jade);
+  border-radius: 999px;
+  color: var(--jade);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Live links for a project, tinted with its accent. Filled on hover so the
+   call to action is obvious. */
+.proj-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+.proj-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border: 1px solid var(--lnk, var(--accent));
+  border-radius: 999px;
+  color: var(--lnk, var(--accent));
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+.proj-link:hover {
+  background: var(--lnk, var(--accent));
+  color: var(--void);
+  transform: translateY(-2px);
+}
 .proj-blurb {
   color: var(--fg-dim);
   font-size: 17px;
