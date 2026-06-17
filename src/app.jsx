@@ -38,7 +38,7 @@ const CODE_PROJECTS = [
   name: 'Portfolio Website',
   role: 'Personal Site',
   stack: ['React', 'Vite', 'Vercel'],
-  blurb: 'This site — built fast and shipped on React + Vite + Vercel. A cosmic theme with ambient SVG/canvas motion: a rocket that wanders the page (and speeds away if you hover near it), an interactive ISS that drifts toward your cursor, animated rover dividers between sections, and an orbiting moon system in the Flight Log.',
+  blurb: 'This site, built fast and shipped on React + Vite + Vercel. A cosmic theme with ambient SVG/canvas motion: a rocket that wanders the page (and speeds away if you hover near it), an interactive ISS that drifts toward your cursor, animated rover dividers between sections, and an orbiting moon system in the Flight Log.',
   accent: 'terracotta',
   year: 'May 2026',
   tag: 'PROD-001',
@@ -49,7 +49,7 @@ const CODE_PROJECTS = [
   name: 'Wall Volleyball',
   role: 'Full-Stack Dev',
   stack: ['React', 'Vercel', 'AWS S3', 'Firebase', 'Stripe'],
-  blurb: 'Rebuilt 4 legacy WordPress sites in React, shipping iteratively to prod instead of waiting for a big-bang launch. Cut infra cost 90%, moved 1,000+ training videos into a scalable AWS S3 pipeline, and built the full e-commerce + customer dashboard flow on Stripe.',
+  blurb: 'Rebuilt 4 legacy WordPress sites in React and shipped iteratively to prod. The hardest part was a subscriber-only dashboard that unlocks just for users who actually paid; getting that gating airtight took a ton of testing. Cut infra cost 90%, moved 1,000+ training videos into a scalable AWS S3 pipeline, and built the full e-commerce flow on Stripe.',
   accent: 'terracotta',
   year: 'Feb–May 2026',
   tag: 'PROD-002',
@@ -61,7 +61,7 @@ const CODE_PROJECTS = [
   name: 'Forkd',
   role: 'Mobile App',
   stack: ['React Native', 'Expo', 'Firebase', 'Google AdMob'],
-  blurb: 'Prototyped and shipped a restaurant-decision app: pulls nearby spots from your location, filters by cuisine and dietary preferences, then spins a colorful wheel to pick. React Native + Expo for the client, Firebase for auth + user data, monetized via Google AdMob.',
+  blurb: 'A friend pitched the idea and I built it in a day, pushing straight to the App Store and updating it ever since. Pulls nearby spots from your location, filters by cuisine and dietary preferences, then spins a colorful wheel to pick. The tricky part was wrangling the Google Maps API and its restaurant keyword tagging so the filters actually return the right places. React Native + Expo, Firebase, Google AdMob.',
   accent: 'ochre',
   year: 'Apr 2026',
   tag: 'APP-001',
@@ -79,7 +79,7 @@ const CODE_PROJECTS = [
   name: 'Ready For School',
   role: 'Frontend Dev',
   stack: ['React', 'Vercel', 'Stripe'],
-  blurb: 'Two donor-facing production sites for an education non-profit — shipped quickly and tuned in prod. 40% faster page loads and 100+ recurring donor subscribers via Stripe + email-capture flows.',
+  blurb: 'Two donor-facing production sites for an education non-profit, shipped quickly and tuned in prod. 40% faster page loads and 100+ recurring donor subscribers via Stripe + email-capture flows.',
   accent: 'ochre',
   year: 'Mar–Apr 2026',
   tag: 'PROD-003',
@@ -131,7 +131,7 @@ const ROBOTICS_PROJECTS = [
   name: 'Autonomous Maze Robot',
   award: 'Mechatronics - PLINKO',
   stack: ['C++', 'Arduino', 'Computer Vision', 'SolidWorks'],
-  blurb: 'A semester-long final I treated like a sprint — prototype a part, 3D-print it, test it that same night, repeat, every single day. While competitors built for perfection and tested only at the end, I validated each subsystem on its own and daily — and beat them. Navigates a maze, collects colored disks, and bins them with sonar + a state machine on a custom 3D-printed and laser-cut chassis.',
+  blurb: 'A semester-long final I treated like a sprint. Prototype a part, 3D-print it, test it that same night, fix it, repeat, every single day. While competitors built for perfection and tested only at the end, I validated each subsystem on its own and daily, and beat them. Navigates a maze, collects colored disks, and bins them with sonar + a state machine on a custom 3D-printed and laser-cut chassis.',
   accent: 'terracotta',
   year: '2024',
   tag: 'BOT-001',
@@ -147,7 +147,7 @@ const ROBOTICS_PROJECTS = [
   name: 'Voice-Activated Zap System',
   award: 'Summer Build',
   stack: ['Arduino', 'C++', 'Voice Rec', 'Relay', 'Taser'],
-  blurb: 'A summer build, made for the fun of it — a voice-recognition shock system that zaps friends when they say off-limits keywords. Hacked it together fast: 95% accuracy, relay-switched, housed in a Frosted Flakes box. Friends learned to watch their language real quick.',
+  blurb: 'Pure fun. I had the idea and started building and testing the same day, totally makeshift. Fried a few components getting there, but it ended up working like a charm: a voice-recognition shock system that zaps friends when they say off-limits keywords. 95% accuracy, relay-switched, housed in a Frosted Flakes box. Friends learned to watch their language real quick.',
   accent: 'crimson',
   year: '2023',
   tag: 'BOT-002',
@@ -171,10 +171,10 @@ const ROBOTICS_PROJECTS = [
 // Work + education timeline shown in the "Flight Log" section, oldest at
 // the bottom, most-recent at the top.
 const EXPERIENCE = [
-{ co: 'Wall Volleyball', role: 'Full-Stack Developer', when: 'Feb 2026 — May 2026', where: 'Remote', notes: 'React migration · e-commerce architecture · Stripe + AWS S3 + Firebase' },
-{ co: 'Ready For School', role: 'Frontend Developer', when: 'Mar 2026 — Apr 2026', where: 'Remote', notes: 'Donor-facing production sites · perf tuning · Stripe payment flows' },
-{ co: 'CodeWiz', role: 'Coding Coach', when: 'May 2025 — Present', where: 'St. Petersburg, FL', notes: '25+ students, ages 7–17 · 90% retention · Scratch + robotics + game dev' },
-{ co: 'Roger Williams University', role: 'B.S. Computer Science · Minor: Robotics & Math', when: 'Aug 2021 — May 2025', where: 'Bristol, RI', notes: 'Dean\'s List · ABET Accredited · Software Design, AI, Mechatronics' }];
+{ co: 'Wall Volleyball', role: 'Full-Stack Developer', when: 'Feb 2026 – May 2026', where: 'Remote', notes: 'React migration · e-commerce architecture · Stripe + AWS S3 + Firebase' },
+{ co: 'Ready For School', role: 'Frontend Developer', when: 'Mar 2026 – Apr 2026', where: 'Remote', notes: 'Donor-facing production sites · perf tuning · Stripe payment flows' },
+{ co: 'CodeWiz', role: 'Coding Coach', when: 'May 2025 – Present', where: 'St. Petersburg, FL', notes: '25+ students, ages 7–17 · 90% retention · Scratch + robotics + game dev' },
+{ co: 'Roger Williams University', role: 'B.S. Computer Science · Minor: Robotics & Math', when: 'Aug 2021 – May 2025', where: 'Bristol, RI', notes: 'Dean\'s List · ABET Accredited · Software Design, AI, Mechatronics' }];
 
 
 // "Off-duty" interests rendered in the About sidebar, with English /
@@ -674,7 +674,7 @@ function ConsoleHello() {
         <div className="console-dots">
           <span /><span /><span />
         </div>
-        <div className="console-title mono">~ / luca — zsh</div>
+        <div className="console-title mono">~ / luca · zsh</div>
       </div>
       <div className="console-body mono">
         <div className="console-line">
@@ -722,10 +722,10 @@ function About() {
               e-commerce and donor sites, and teach kids how to code on the side.
             </p>
             <p>
-              Mostly, I build fast. <span className="terra">Prototype, test, iterate</span> — I'd
-              rather ship something rough and learn from real use than polish in a vacuum, because
-              shipping is the fastest way to find out what actually works. It's a founder's mindset:
-              move quick, test constantly, and turn what I learn into working products.
+              I build fast. <span className="terra">Prototype, test, iterate.</span> I'd rather ship
+              something rough and learn from real use than polish in a vacuum, because shipping is the
+              fastest way to find out what actually works. I move quick, test constantly, and turn what
+              I learn into working products.
             </p>
           </div>
 
@@ -865,7 +865,7 @@ function CodeProjects() {
 
           <div className="project-detail" key={proj.id}>
             <ImageSlot
-              label={`${proj.name.toUpperCase()} — screenshot`}
+              label={`${proj.name.toUpperCase()} · screenshot`}
               ratio={proj.imageRatio || '16 / 10'}
               accent={proj.accent}
               src={proj.image}
@@ -905,7 +905,7 @@ function BotCard({ p }) {
         <span className="mono dim">{p.tag} · {p.year}</span>
         <span className="mono pill">{p.award}</span>
       </div>
-      <ImageSlot label={`${p.name.toUpperCase()} — photo`} ratio="4 / 3" accent={p.accent} src={p.image} imageObjectPosition={p.imageObjectPosition} />
+      <ImageSlot label={`${p.name.toUpperCase()} · photo`} ratio="4 / 3" accent={p.accent} src={p.image} imageObjectPosition={p.imageObjectPosition} />
       <h3 className="bot-title">{p.name}</h3>
       <p className="bot-blurb">{p.blurb}</p>
       <div className="bot-specs">
@@ -1273,7 +1273,7 @@ function Contact() {
 
         <footer className="footer mono">
           <div>LUCA · MARTINEZ · MMXXVI</div>
-          <div className="dim">— signed off from St. Petersburg, FL · 27.7676° N —</div>
+          <div className="dim">Signed off from St. Petersburg, FL · 27.7676° N</div>
         </footer>
       </div>
     </section>);
