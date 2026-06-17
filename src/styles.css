@@ -192,6 +192,14 @@ p { line-height: 1.6; color: var(--fg); }
   letter-spacing: 0.14em;
 }
 .hero-nav a:hover { color: var(--accent); }
+/* Taller, dimmer divider between the number and the label. Sits tight to the
+   number; the space in the markup gives breathing room before the word. */
+.hero-nav .nav-sep {
+  display: inline-block;
+  transform: scaleY(1.9);
+  color: var(--fg-faint);
+  margin: 0 7px 0 1px; /* tight to the number, clear gap before the word */
+}
 .status-right { color: var(--fg-dim); }
 
 @media (max-width: 880px) {
