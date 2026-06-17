@@ -14,6 +14,8 @@ import mechatronicsImage from './images/Mechatronics.jpg';
 import voiceZapImage from './images/VoiceZap.jpg';
 import reactionTimerImage from './images/ReactionTimer.jpg';
 import meImage from './images/Me.jpg';
+import brainfuelImage from './images/Brainfuel1.png';
+import brainfuelImage2 from './images/Brainfuel2.png';
 
 /* ============ DATA ============
  *
@@ -37,12 +39,15 @@ const CODE_PROJECTS = [
   id: 'brainfuel',
   name: 'Brainfuel',
   role: 'In Progress',
-  stack: ['React Native', 'Expo'],
-  blurb: 'A work in progress, started this month. I wanted to figure out how to get people off their phones, so I am building an app blocker with a twist: to unblock an app, you have to play a quick mental game first. Just enough friction to make you think before you scroll.',
+  stack: ['React Native', 'Expo', 'Screen Time', 'iCloud'],
+  blurb: 'A work in progress, started this month. I wanted to figure out how to get people off their phones, so I am building an app blocker with a twist: to unblock an app, you have to play a quick mental game first. Just enough friction to make you think before you scroll. Built fully on-device, using Apple Screen Time for the blocking and iCloud for personal stats.',
   accent: 'jade',
   year: 'Jun 2026',
   tag: 'WIP-001',
-  wip: true
+  wip: true,
+  images: [brainfuelImage, brainfuelImage2],
+  imageRatio: '1 / 1',
+  imageMaxWidth: '420px'
 },
 {
   id: 'portfolio',
