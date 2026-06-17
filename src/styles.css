@@ -8,7 +8,7 @@
   /* Absolute + full-document-height (sized in JS) so the canvas rides
      the document with the browser's compositor instead of the JS thread.
      On iOS Safari, position:fixed canvases visibly drag with momentum
-     scroll then snap back — making the trail "come with the scroll then
+     scroll then snap back - making the trail "come with the scroll then
      bounce back to the rocket." Doc-anchored, drawing in doc coords,
      fixes that without any per-frame scrollY math. */
   position: absolute;
@@ -19,7 +19,7 @@
   pointer-events: none;
 }
 .rocket-ship {
-  /* Absolute (not fixed) so the ship is anchored to document coords —
+  /* Absolute (not fixed) so the ship is anchored to document coords -
      it can be at the bottom of the page while the user is at the top.
      JS sets a translate() in document coords to move it; the negative
      margins center the ship's bounding box on the translate point. */
@@ -34,7 +34,7 @@
   pointer-events: none;
   will-change: transform;
 }
-/* Exhaust flame flicker — purely cosmetic, runs constantly at the
+/* Exhaust flame flicker - purely cosmetic, runs constantly at the
    same rate the ship is on screen. transform-origin sits near the
    top of the flame so it stretches/squashes along its length. */
 .rocket-flame {
@@ -45,7 +45,7 @@
   from { transform: scaleY(0.85) scaleX(1.05); opacity: 0.85; }
   to   { transform: scaleY(1.10) scaleX(0.92); opacity: 1.00; }
 }
-/* Rocket roams on mobile too — kept the rAF + canvas running across all
+/* Rocket roams on mobile too - kept the rAF + canvas running across all
    viewports. The orbital path math uses scrollHeight + viewport size, so
    it adapts naturally to the narrower stacked layout. */
 
@@ -64,7 +64,7 @@
   opacity: 0.3;
   pointer-events: none;
   /* Pull the divider into the existing gap so the page doesn't grow
-     taller — the section padding above + below gives plenty of room. */
+     taller - the section padding above + below gives plenty of room. */
   margin-top: -40px;
   margin-bottom: -40px;
 }
@@ -94,7 +94,7 @@
   to   { transform: translateY(-3px); }
 }
 
-/* ── Variant 4 (Toy): chunkier proportions get a slightly bigger
+/* Variant 4 (Toy): chunkier proportions get a slightly bigger
        bounce + slower bob, so the toys feel weighty and friendly. */
 .mars-bounce-toy {
   animation: mars-bounce-toy 0.36s ease-in-out infinite alternate;
@@ -140,7 +140,7 @@ p { line-height: 1.6; color: var(--fg); }
 .terra { color: var(--terracotta); }
 .ochre { color: var(--ochre); }
 .crimson { color: var(--crimson); }
-/* Traffic-light "go" green — same hue as the SYS · ONLINE dot. */
+/* Traffic-light "go" green - same hue as the SYS · ONLINE dot. */
 .go { color: oklch(72% 0.18 150); }
 .jade { color: var(--jade); }
 
@@ -160,7 +160,7 @@ p { line-height: 1.6; color: var(--fg); }
   justify-content: space-between;
   align-items: center;
   /* Minimum gap between SYS · ONLINE and the time so they always have
-     visible breathing room — and `flex-wrap: wrap` so on very narrow
+     visible breathing room - and `flex-wrap: wrap` so on very narrow
      phones they drop to two lines instead of crowding. */
   gap: 24px;
   flex-wrap: wrap;
@@ -249,13 +249,13 @@ p { line-height: 1.6; color: var(--fg); }
   }
 }
 
-/* Planet deck — anchored inside the Experience section, mirroring how
+/* Planet deck - anchored inside the Experience section, mirroring how
    .orbit-deck sits inside the hero. Absolute-positioned on the right
    so the timeline content (which is in a higher-z .container) reads
    on top of it. The negative right offset pushes part of the planet
    off-screen, giving the same "in the corner of the universe" feel
    as the hero's ISS. */
-/* No overflow:hidden here — moons orbiting the planet need to drift
+/* No overflow:hidden here - moons orbiting the planet need to drift
    vertically past the section's bounds without being clipped. The
    body's overflow-x:hidden still prevents horizontal scrollbars from
    the deck's negative right offset, so no extra clipping needed. */
@@ -269,9 +269,9 @@ p { line-height: 1.6; color: var(--fg); }
   aspect-ratio: 1;
   z-index: 1;
   opacity: 0.85;
-  pointer-events: none; /* purely decorative — don't intercept clicks */
+  pointer-events: none; /* purely decorative - don't intercept clicks */
 }
-/* Mobile / narrow viewports: same treatment as the hero's orbit-deck —
+/* Mobile / narrow viewports: same treatment as the hero's orbit-deck -
    make the experience section a flex column, drop the planet-deck out
    of absolute positioning, and push it under the timeline with order:1
    so the moons + planet show up on phone instead of being hidden off
@@ -310,7 +310,7 @@ p { line-height: 1.6; color: var(--fg); }
 }
 
 .hero-meta { display: flex; flex-direction: column; gap: 18px; }
-/* Hide the CALL SIGN / N° / LOC / LANG meta panel on mobile — its info is
+/* Hide the CALL SIGN / N° / LOC / LANG meta panel on mobile - its info is
    already covered by the hero copy and HUD frame. (After the base rule so it
    wins the cascade.) */
 @media (max-width: 880px) {
@@ -443,7 +443,7 @@ p { line-height: 1.6; color: var(--fg); }
   .section { padding: 64px 0; scroll-margin-top: -32px; }
 }
 /* Per-section landing tweaks (ID beats .section, so these win and apply to
-   EVERY link targeting them — nav links AND the hero buttons alike):
+   EVERY link targeting them - nav links AND the hero buttons alike):
    About sits a little higher, Contact a little lower than the default. */
 #about   { scroll-margin-top: -55px; }  /* a bit higher = a bit more gap above */
 #contact { scroll-margin-top: -115px; } /* a bit lower = a bit less gap above */
@@ -498,7 +498,7 @@ p { line-height: 1.6; color: var(--fg); }
   .about-grid { grid-template-columns: 1fr; gap: 50px; }
 }
 
-/* Operator ID — circular crew portrait floated at the top-center of the
+/* Operator ID - circular crew portrait floated at the top-center of the
    section, framed with concentric rings to echo the orbital instruments in
    the hero. Absolutely positioned so it never pushes the columns down. */
 .operator-id {
@@ -554,7 +554,7 @@ p { line-height: 1.6; color: var(--fg); }
 }
 /* Below the wide breakpoint the left text column reaches past center, so the
    floating portrait would clip it. Drop it into normal flow as a centered
-   block between the title and the grid — it stays top-center and never
+   block between the title and the grid - it stays top-center and never
    overlaps. (On wide screens it floats and pushes nothing down.) */
 @media (max-width: 1100px) {
   .operator-id {
@@ -683,14 +683,14 @@ p { line-height: 1.6; color: var(--fg); }
   width: 100%;
   height: 100%;
   /* Defaults: cover-fit, centered. Individual projects override these
-     per-image via inline style — Wall Volleyball anchors `left` to keep
+     per-image via inline style - Wall Volleyball anchors `left` to keep
      the sidebar in frame, phone-screenshot projects use `contain` so
      the whole phone shows with letterboxing instead of getting cropped. */
   object-fit: cover;
   object-position: center;
   display: block;
 }
-/* Multi-image variant — N images side by side in equal-width columns
+/* Multi-image variant - N images side by side in equal-width columns
    with a small gap, used for app projects that show two screenshots
    together. Cells use object-fit:cover by default; the per-image
    inline style still applies. */
@@ -807,7 +807,7 @@ p { line-height: 1.6; color: var(--fg); }
 }
 .proj-year { font-size: 11px; color: var(--fg-faint); }
 
-/* Mobile project picker — hidden on desktop (the row list is used there).
+/* Mobile project picker - hidden on desktop (the row list is used there).
    Below 880px the row list is hidden and this compact dropdown takes over. */
 .proj-select { display: none; }
 @media (max-width: 880px) {
@@ -826,7 +826,7 @@ p { line-height: 1.6; color: var(--fg); }
     letter-spacing: 0.04em;
     padding: 16px 44px 16px 18px;
     cursor: pointer;
-    /* custom caret (native arrow removed by appearance:none) — orange to match */
+    /* custom caret (native arrow removed by appearance:none) - orange to match */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23d3754e' stroke-width='1.5'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 18px center;
@@ -987,7 +987,7 @@ p { line-height: 1.6; color: var(--fg); }
     transform: rotateY(calc(var(--i) * 120deg)) translateZ(calc(40vw / 1.7320508));
   }
   /* Natural height (NOT 100%) so the photo keeps its 4/3 size and nothing is
-     clipped — the scene height is measured from these cards in JS. */
+     clipped - the scene height is measured from these cards in JS. */
   .prism-face .bot-card {
     width: 100%;
     background: rgba(13, 11, 26, 0.92); /* opaque so faces behind don't bleed through */
@@ -1135,7 +1135,7 @@ p { line-height: 1.6; color: var(--fg); }
 }
 .contact-grid {
   display: grid;
-  /* min(100%, 440px) so the 440px floor never exceeds the viewport — on
+  /* min(100%, 440px) so the 440px floor never exceeds the viewport - on
      phones the column shrinks to full width instead of overflowing. */
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
   gap: 16px;

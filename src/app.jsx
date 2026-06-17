@@ -1,4 +1,4 @@
-﻿// Luca Martinez — Portfolio App
+﻿// Luca Martinez - Portfolio App
 
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import wallVBImage from './images/WallVB.png';
@@ -19,7 +19,7 @@ import meImage from './images/Me.jpg';
  *
  * Static content lives at the top of the file as plain JS arrays. The
  * intent is that updating the portfolio (adding a project, changing a
- * blurb, etc.) means editing one of these arrays — not touching the
+ * blurb, etc.) means editing one of these arrays - not touching the
  * components below.
  *
  * Each entry uses an `accent` key that maps into ACCENT_HEX so the
@@ -67,7 +67,7 @@ const CODE_PROJECTS = [
   tag: 'APP-001',
   // Two phone screenshots side-by-side. Square-ish frame at 420px max
   // so the slot is noticeably less tall than a single 9:19 phone (which
-  // was 591px tall) — the description below now stays on screen. Each
+  // was 591px tall) - the description below now stays on screen. Each
   // column ends up close to phone aspect, so the screenshots render
   // mostly uncropped under cover-fit.
   images: [forkdImage, forkdImage2],
@@ -79,7 +79,7 @@ const CODE_PROJECTS = [
   name: 'Ready For School',
   role: 'Frontend Dev',
   stack: ['React', 'Vercel', 'Stripe'],
-  blurb: 'My mom runs a non-profit for students in Peru. We were headed there just to visit family, with no plans to fundraise, until a month out she asked: what if we find a way to donate books? So I built two sites on React + Stripe, one for the non-profit and one for the fundraiser. We raised enough to give books, jackets, hoodies, backpacks, and school supplies to two schools in the Andes.',
+  blurb: 'My mom runs a non-profit for students in Peru. We were headed there just to visit family, with no plans to fundraise, until a month out she asked: what if we find a way to donate books? So in less than a week I built two sites on React + Stripe, one for the non-profit and one for the fundraiser. We raised enough to give books, jackets, hoodies, backpacks, and school supplies to two schools in the Andes.',
   accent: 'ochre',
   year: 'Mar–Apr 2026',
   tag: 'PROD-003',
@@ -101,7 +101,7 @@ const CODE_PROJECTS = [
   name: 'Reminders Cleaner',
   role: 'iOS App',
   stack: ['Flutter', 'Dart', 'iOS SDK'],
-  blurb: 'Built a Tinder-style swipe interface for cleaning out the iOS Reminders database. Native SDK integration, 100+ reminders processed with zero data loss, themeable UI + onboarding.',
+  blurb: 'I use iOS Reminders as my notes app, so I had 1,000+ piled up and no fast way to clear them. So I built a gamified way to do it: a Tinder-style swipe interface that makes deleting reminders quick and weirdly satisfying. Native SDK integration, hundreds processed with zero data loss, themeable UI + onboarding.',
   accent: 'crimson',
   year: 'Jul 2025',
   tag: 'APP-003',
@@ -137,7 +137,7 @@ const ROBOTICS_PROJECTS = [
   tag: 'BOT-001',
   specs: ['Sonar depth', 'OOD state machine', 'CV color detection'],
   image: mechatronicsImage,
-  // Shift the visible window down — anchors the lower portion of the
+  // Shift the visible window down - anchors the lower portion of the
   // 4284×5712 source so the robot/board content sits in frame instead
   // of getting top-cropped.
   imageObjectPosition: 'center 90%'
@@ -183,6 +183,7 @@ const INTERESTS = [
 { name: 'Beach Volleyball', es: 'Vóley playa', glyph: '○' },
 { name: 'Rock Climbing',    es: 'Escalada',    glyph: '△' },
 { name: 'Robotics',         es: 'Robótica',    glyph: '⬡' },
+{ name: 'App Building',     es: 'Crear apps',  glyph: '◇' },
 { name: 'Video Creation',   es: 'Cine',        glyph: '▷' }];
 
 
@@ -220,7 +221,7 @@ const ACCENT_HEX = {
  *      component is mounted. Each frame it:
  *        a. computes the *target* translate/rotate from current inputs,
  *        b. lerps the *displayed* values toward those targets.
- *      The lerp is what makes the motion feel seamless — sudden changes
+ *      The lerp is what makes the motion feel seamless - sudden changes
  *      in target (e.g. cursor entering the dead zone) decay over ~10
  *      frames instead of snapping.
  *
@@ -245,8 +246,8 @@ function useScrollMouseTransform(deckRef, targetRef, opts = {}) {
     deadZonePx = 110,           // px around center where pull is disabled (stabilizes singularity)
     maxNudgePx = 18,            // peak displacement (px) when cursor is at the dead-zone edge
     scrollRotDegPerPx = 0.04,   // 1 px of scroll → this many degrees of rotation
-    pullEase = 0.12,            // 0..1 — lerp factor for translation; lower = more lag/smoother
-    rotEase = 0.20,             // 0..1 — lerp factor for rotation
+    pullEase = 0.12,            // 0..1 - lerp factor for translation; lower = more lag/smoother
+    rotEase = 0.20,             // 0..1 - lerp factor for rotation
     viewBoxSize = 600,          // SVG viewBox width (assumes -size/2..size/2 on each axis)
   } = opts;
 
@@ -293,7 +294,7 @@ function useScrollMouseTransform(deckRef, targetRef, opts = {}) {
         targetPullY = (dy / dist) * strengthPx * pxToSvg;
       }
 
-      // Exponential approach toward target — the eased curves are what
+      // Exponential approach toward target - the eased curves are what
       // hide the dead-zone boundary visually.
       curPullX += (targetPullX - curPullX) * pullEase;
       curPullY += (targetPullY - curPullY) * pullEase;
@@ -302,7 +303,7 @@ function useScrollMouseTransform(deckRef, targetRef, opts = {}) {
       curRot += (targetRot - curRot) * rotEase;
 
       // SVG transforms apply right-to-left: rotate first, then translate
-      // — so rotation pivots around the local origin and translation
+      // - so rotation pivots around the local origin and translation
       // is independent of spin angle.
       target.setAttribute(
         'transform',
@@ -335,7 +336,7 @@ function useScrollMouseTransform(deckRef, targetRef, opts = {}) {
 
 /**
  * The little numbered tag that sits above every section heading
- * (e.g. "01 / ABOUT THE OPERATOR"). Pure presentation — no state.
+ * (e.g. "01 / ABOUT THE OPERATOR"). Pure presentation - no state.
  */
 function SectionLabel({ num, children }) {
   return (
@@ -347,7 +348,7 @@ function SectionLabel({ num, children }) {
 }
 
 /**
- * The large editorial heading that sits under a SectionLabel — set in the
+ * The large editorial heading that sits under a SectionLabel - set in the
  * Instrument Serif italic used by the hero/ledes (e.g. "The operator.").
  */
 function SectionTitle({ children }) {
@@ -369,7 +370,7 @@ function Hero() {
   const orbitDeckRef = useRef(null);
   const issPullRef = useRef(null);
 
-  // ── Live EST clock ────────────────────────────────────────────────
+  // Live EST clock 
   // setInterval keeps a render cadence of ~1s; the cleanup clears the
   // timer on unmount so we don't leak a handle if Hero is ever removed.
   useEffect(() => {
@@ -400,16 +401,16 @@ function Hero() {
           <span className="mono">SYS · ONLINE</span>
         </div>
         <nav className="hero-nav">
-          <a href="#about" className="mono">01 | About</a>
-          <a href="#experience" className="mono">02 | Experience</a>
-          <a href="#code" className="mono">03 | Code</a>
-          <a href="#robotics" className="mono">04 | Robotics</a>
-          <a href="#contact" className="mono">05 | Contact</a>
+          <a href="#about" className="mono">01|About</a>
+          <a href="#experience" className="mono">02|Experience</a>
+          <a href="#code" className="mono">03|Code</a>
+          <a href="#robotics" className="mono">04|Robotics</a>
+          <a href="#contact" className="mono">05|Contact</a>
         </nav>
         <div className="status-right mono">{est}</div>
       </div>
 
-      {/* Orbital decoration — ISS */}
+      {/* Orbital decoration - ISS */}
       <div className="orbit-deck" aria-hidden="true" ref={orbitDeckRef}>
         <svg viewBox="-300 -300 600 600" width="100%" height="100%">
           <defs>
@@ -444,7 +445,7 @@ function Hero() {
             );
           })}
 
-          {/* ISS — drifts slowly */}
+          {/* ISS - drifts slowly */}
           <g className="iss-drift">
             <g ref={issPullRef}>
             <g transform="rotate(-12)">
@@ -456,7 +457,7 @@ function Hero() {
                 <line key={i} x1={-160 + i * 40} y1="-3" x2={-160 + i * 40} y2="3" stroke="#3a3326" strokeWidth="0.5" />
               ))}
 
-              {/* Solar arrays — 4 pairs, panels with grid */}
+              {/* Solar arrays - 4 pairs, panels with grid */}
               {[-160, -100, 100, 160].map((cx, idx) => (
                 <g key={idx} transform={`translate(${cx}, 0)`}>
                   {/* upper panel */}
@@ -491,7 +492,7 @@ function Hero() {
                 ))}
               </g>
 
-              {/* Central module cluster — vertical spine */}
+              {/* Central module cluster - vertical spine */}
               <g>
                 {/* spine */}
                 <rect x="-9" y="-44" width="18" height="88" rx="3" fill="url(#module)" stroke="#3a3326" strokeWidth="0.5" />
@@ -591,7 +592,7 @@ function Hero() {
  * Two implementation choices worth flagging for review:
  *
  *  1. IntersectionObserver gates the *first* tick so the animation
- *     doesn't run while the section is still off-screen — once the
+ *     doesn't run while the section is still off-screen - once the
  *     panel scrolls into view the loop kicks off and self-perpetuates.
  *
  *  2. The animation is driven by a small phase machine ("typing" →
@@ -610,7 +611,7 @@ function ConsoleHello() {
 
     let i = 0;                        // current cursor position within fullText
     let phase = 'typing';             // 'typing' | 'holding' | 'erasing'
-    let timeoutId;                    // single live timeout — replaced each tick
+    let timeoutId;                    // single live timeout - replaced each tick
     let started = false;              // ensures we only kick off once per mount
 
     // Each call advances exactly one step (one char or one phase
@@ -628,7 +629,7 @@ function ConsoleHello() {
           const delay = ch === ',' ? 220 : ch === ' ' ? 80 : 75 + Math.random() * 70;
           timeoutId = setTimeout(tick, delay);
         } else {
-          // Done typing — hold the full sentence on screen for a beat.
+          // Done typing - hold the full sentence on screen for a beat.
           phase = 'holding';
           timeoutId = setTimeout(tick, 2500);
         }
@@ -644,7 +645,7 @@ function ConsoleHello() {
           setTyped(fullText.slice(0, i));
           timeoutId = setTimeout(tick, 35 + Math.random() * 25);
         } else {
-          // Empty — short breath, then start typing again.
+          // Empty - short breath, then start typing again.
           phase = 'typing';
           timeoutId = setTimeout(tick, 600);
         }
@@ -696,7 +697,7 @@ function ConsoleHello() {
 /* ---------- About ----------
  * Two-column section: bio paragraphs on the left, sidebar on the right
  * containing the live typewriter terminal and the off-duty interests.
- * Stateless — the only animation lives inside <ConsoleHello />.
+ * Stateless - the only animation lives inside <ConsoleHello />.
  */
 function About() {
   return (
@@ -762,9 +763,9 @@ function ImageSlot({
   ratio = '4 / 3',
   accent = 'terracotta',
   src,
-  images,               // optional array of N image srcs — renders side-by-side in equal columns
-  imageFit,             // 'cover' | 'contain' — overrides default 'cover'
-  imageObjectPosition,  // e.g. 'left center' | 'center' — overrides default 'center'
+  images,               // optional array of N image srcs - renders side-by-side in equal columns
+  imageFit,             // 'cover' | 'contain' - overrides default 'cover'
+  imageObjectPosition,  // e.g. 'left center' | 'center' - overrides default 'center'
   maxWidth,             // optional cap on the frame's width (e.g. '420px' for a phone-aspect frame)
 }) {
   // When maxWidth is set, also center the constrained frame inside its parent.
@@ -819,7 +820,7 @@ function ImageSlot({
  * the currently-selected project's screenshot + write-up on the right.
  * Selection lives in a single `active` index so clicking a row swaps the
  * detail view without remounting the whole section. The detail panel
- * gets `key={proj.id}` so React tears it down and remounts on change —
+ * gets `key={proj.id}` so React tears it down and remounts on change -
  * which lets us play CSS enter animations on every selection.
  */
 function CodeProjects() {
@@ -892,11 +893,11 @@ function CodeProjects() {
 }
 
 /* ---------- Robotics Projects ----------
- * Card grid (no detail view here — the cards are short enough to read
+ * Card grid (no detail view here - the cards are short enough to read
  * inline). Each card colors its border / accents from `--card-accent`,
  * a CSS custom property set per-card from ACCENT_HEX.
  */
-/** A single robotics build card — shared by the desktop grid and the mobile
+/** A single robotics build card - shared by the desktop grid and the mobile
  *  carousel so the markup stays in one place. */
 function BotCard({ p }) {
   return (
@@ -974,7 +975,7 @@ function RoboticsProjects() {
     const snapped = Math.round(drag.current.a / 120) * 120;
     drag.current = null;
     // Restore the CSS transition, then write the snapped transform IMPERATIVELY
-    // so it always animates to a face — even when `snapped` equals the current
+    // so it always animates to a face - even when `snapped` equals the current
     // state (React would otherwise skip the DOM update and leave it mid-spin).
     if (prismRef.current) prismRef.current.style.transition = '';
     applyTransform(snapped);
@@ -1028,7 +1029,7 @@ function RoboticsProjects() {
 }
 
 /* ---------- Planet Deck ----------
- * Decorative Saturn-styled planet — the visual counterpart to the
+ * Decorative Saturn-styled planet - the visual counterpart to the
  * hero's ISS, placed inside the Experience section so the timeline
  * content reads against it. Renders a gradient body with gas-giant
  * latitude bands, a Jupiter-style storm spot, a tilted ring drawn in
@@ -1036,7 +1037,7 @@ function RoboticsProjects() {
  * an atmospheric halo, and two distant moons on independent CSS orbits.
  *
  * Reuses useScrollMouseTransform with slightly different tunables than
- * the ISS — bigger pull radius, snappier scroll rotation — so the two
+ * the ISS - bigger pull radius, snappier scroll rotation - so the two
  * animations feel related but not identical.
  *
  * The component renders ONLY the absolute-positioned deck div; the
@@ -1047,7 +1048,7 @@ function PlanetDeck() {
   const planetRef = useRef(null);
 
   useScrollMouseTransform(deckRef, planetRef, {
-    pullRangePx: 460,         // a touch wider than the ISS — planets feel heavier, longer reach
+    pullRangePx: 460,         // a touch wider than the ISS - planets feel heavier, longer reach
     deadZonePx: 130,
     maxNudgePx: 16,
     scrollRotDegPerPx: 0.05,  // spins a hair faster than the ISS
@@ -1070,7 +1071,7 @@ function PlanetDeck() {
               <stop offset="80%" stopColor="oklch(65% 0.15 40)" stopOpacity="0.16" />
               <stop offset="100%" stopColor="oklch(65% 0.15 40)" stopOpacity="0" />
             </radialGradient>
-            {/* Ring gradient — fades at both ends so the ring doesn't
+            {/* Ring gradient - fades at both ends so the ring doesn't
                 hard-stop at the planet's silhouette. */}
             <linearGradient id="planet-ring" x1="0" x2="1">
               <stop offset="0%" stopColor="oklch(75% 0.13 75)" stopOpacity="0" />
@@ -1080,14 +1081,14 @@ function PlanetDeck() {
             </linearGradient>
           </defs>
 
-          {/* Faint distant orbits — backdrop, not part of the planet group. */}
+          {/* Faint distant orbits - backdrop, not part of the planet group. */}
           <circle r="170" fill="none" stroke="rgba(244,234,216,0.06)" strokeWidth="0.5" strokeDasharray="2 6" />
           <circle r="240" fill="none" stroke="rgba(244,234,216,0.04)" strokeWidth="0.4" />
 
           {/* Everything inside this <g> rotates with scroll and edges
               toward the cursor. The hook writes the transform here. */}
           <g ref={planetRef}>
-            {/* Atmospheric halo — soft warm glow around the limb. */}
+            {/* Atmospheric halo - soft warm glow around the limb. */}
             <circle r="135" fill="url(#planet-glow)" />
 
             {/* Back half of the ring, drawn behind the body. */}
@@ -1101,12 +1102,12 @@ function PlanetDeck() {
             {/* Planet body. */}
             <circle r="110" fill="url(#planet-body)" />
 
-            {/* Surface bands — wide ellipses suggest gas-giant latitude lines. */}
+            {/* Surface bands - wide ellipses suggest gas-giant latitude lines. */}
             <ellipse cx="0" cy="-32" rx="104" ry="6" fill="oklch(60% 0.10 60)" opacity="0.20" />
             <ellipse cx="0" cy="22"  rx="108" ry="9" fill="oklch(35% 0.10 30)" opacity="0.28" />
             <ellipse cx="0" cy="58"  rx="90"  ry="5" fill="oklch(50% 0.12 50)" opacity="0.20" />
 
-            {/* Storm spot — Jupiter-style flourish, slightly tilted. */}
+            {/* Storm spot - Jupiter-style flourish, slightly tilted. */}
             <g transform="rotate(-8 -38 8)">
               <ellipse cx="-38" cy="8" rx="20" ry="11" fill="oklch(45% 0.15 25)" opacity="0.55" />
               <ellipse cx="-38" cy="8" rx="11" ry="6"  fill="oklch(32% 0.15 20)" opacity="0.7" />
@@ -1125,7 +1126,7 @@ function PlanetDeck() {
               their independent CSS orbital animations regardless of the
               planet's scroll-rotation or cursor pull. */}
           {/* Five chunky moons with crater detail. Each has a subtly
-              tinted gray body — red, plain, yellow, orange, cool —
+              tinted gray body - red, plain, yellow, orange, cool -
               so the lineup reads as varied moons rather than five
               identical pebbles. Orbits get progressively wider; the
               fifth moon sits roughly twice as far out as the rest
@@ -1133,7 +1134,7 @@ function PlanetDeck() {
               them drift past the deck's box; the section no longer
               has overflow:hidden so they cross into the Robotics
               section above without clipping. */}
-          {/* Moon 1 — innermost, fast, red tint */}
+          {/* Moon 1 - innermost, fast, red tint */}
           <g className="orbit-moon orbit-moon-2">
             <g transform="translate(240, 0)">
               <circle r="8" fill="oklch(70% 0.04 25)" stroke="#1a1a1a" strokeWidth="0.4" />
@@ -1142,7 +1143,7 @@ function PlanetDeck() {
               <circle cx="-3" cy="3"  r="1"   fill="oklch(45% 0.05 25)" opacity="0.6" />
             </g>
           </g>
-          {/* Moon 2 — plain gray, mid speed */}
+          {/* Moon 2 - plain gray, mid speed */}
           <g className="orbit-moon orbit-moon-1">
             <g transform="translate(340, 0)">
               <circle r="11" fill="#a8a8a8" stroke="#1a1a1a" strokeWidth="0.5" />
@@ -1152,7 +1153,7 @@ function PlanetDeck() {
               <circle cx="5"  cy="-2" r="1"   fill="#777" opacity="0.7" />
             </g>
           </g>
-          {/* Moon 3 — yellow tint */}
+          {/* Moon 3 - yellow tint */}
           <g className="orbit-moon orbit-moon-3">
             <g transform="translate(440, 0)">
               <circle r="9" fill="oklch(76% 0.04 85)" stroke="#1a1a1a" strokeWidth="0.4" />
@@ -1161,7 +1162,7 @@ function PlanetDeck() {
               <circle cx="-3" cy="4"  r="1.2" fill="oklch(50% 0.05 85)" opacity="0.7" />
             </g>
           </g>
-          {/* Moon 4 — orange tint, biggest body */}
+          {/* Moon 4 - orange tint, biggest body */}
           <g className="orbit-moon orbit-moon-4">
             <g transform="translate(540, 0)">
               <circle r="13" fill="oklch(72% 0.05 50)" stroke="#1a1a1a" strokeWidth="0.5" />
@@ -1172,7 +1173,7 @@ function PlanetDeck() {
               <circle cx="0"  cy="6"  r="1"   fill="oklch(48% 0.06 50)" opacity="0.65" />
             </g>
           </g>
-          {/* Moon 5 — far outer dwarf, very slow, cool blue-gray */}
+          {/* Moon 5 - far outer dwarf, very slow, cool blue-gray */}
           <g className="orbit-moon orbit-moon-5">
             <g transform="translate(800, 0)">
               <circle r="10" fill="oklch(72% 0.025 240)" stroke="#1a1a1a" strokeWidth="0.5" />
@@ -1284,7 +1285,7 @@ function Contact() {
  * Small cartoony rocket that flies *autonomously* through the entire
  * document on a slow time-based orbit, leaving a fading red-fire-into-
  * smoke particle trail. The ship lives in document coordinates so it
- * can be at the bottom of the page while the user is at the top —
+ * can be at the bottom of the page while the user is at the top -
  * scroll to that part and you'll find it (and its trail) waiting.
  *
  * Two layered elements:
@@ -1304,7 +1305,7 @@ function Contact() {
  * Both layers are pointer-events:none so they never intercept clicks.
  *
  * Path: two slow sine oscillations with different periods, computed
- * directly from `performance.now()` — so the ship's progress is
+ * directly from `performance.now()` - so the ship's progress is
  * independent of where the user is scrolling. The y-period spans the
  * full document height, the x-period oscillates within the viewport
  * width.
@@ -1319,29 +1320,29 @@ function Rocket() {
     if (!canvas || !ship) return;
     const ctx = canvas.getContext('2d');
 
-    // ── Tunables ────────────────────────────────────────────────
-    const SHIP_EASE = 0.07;            // 0..1 — lower = lazier ship homing toward target
+    // Tunables 
+    const SHIP_EASE = 0.07;            // 0..1 - lower = lazier ship homing toward target
     const SPAWN_PER_FRAME = 2;         // base particles per frame; scales up at hover speed too
     const PARTICLE_LIFE_S = 2.0;       // seconds before a particle dies and is recycled
-    const PARTICLE_BASE_R = 6;         // px — radius at birth
-    const PARTICLE_GROW_R = 12;        // px — additional radius gained over lifetime (puffier smoke)
-    const PARTICLE_BIRTH_ALPHA = 0.85; // opacity at birth — bumped for a denser-looking trail
+    const PARTICLE_BASE_R = 6;         // px - radius at birth
+    const PARTICLE_GROW_R = 12;        // px - additional radius gained over lifetime (puffier smoke)
+    const PARTICLE_BIRTH_ALPHA = 0.85; // opacity at birth - bumped for a denser-looking trail
     const FIRE_RGB = [232, 110, 50];   // bright fire color at birth
     const SMOKE_RGB = [200, 195, 180]; // warm gray smoke at death
     const PATH_MARGIN = 70;            // px buffer from viewport edges so the ship doesn't clip
     const Y_PERIOD_S = 150;            // seconds for one full top→bottom→top oscillation (3× slower than v1)
     const X_PERIOD_S = 54;             // seconds for one full left→right→left oscillation
-    // Hover speedup — when the cursor is near the ship, simulated time
+    // Hover speedup - when the cursor is near the ship, simulated time
     // advances 3× faster, restoring the previous brisk pace.
     const HOVER_RADIUS_PX = 90;        // px from ship center within which we consider "hovered"
     const SPEED_MULT_BASE = 1;
     const SPEED_MULT_HOVER = 5;
-    const MULT_EASE = 0.08;            // 0..1 — how snappily the multiplier eases between base and hover
+    const MULT_EASE = 0.08;            // 0..1 - how snappily the multiplier eases between base and hover
 
-    // ── Canvas resize / DPR handling ────────────────────────────
+    // Canvas resize / DPR handling 
     // Canvas is doc-anchored (position: absolute) and sized to the
     // FULL document, not the viewport. Drawing in doc coords means
-    // the trail rides the document with the compositor — no per-frame
+    // the trail rides the document with the compositor - no per-frame
     // scrollY math to lag during iOS momentum scroll.
     //
     // `w` is viewport width (path math); `vh` is viewport height (cull
@@ -1349,7 +1350,7 @@ function Rocket() {
     let w = 0, vh = 0, docH = 0;
     let lastDpr = 0, lastCssW = 0, lastCssDocH = 0;
     const resize = () => {
-      // Cap DPR at 2 — particles are feathered radial gradients where
+      // Cap DPR at 2 - particles are feathered radial gradients where
       // DPR 3 isn't perceptible, and a tall doc × DPR 3 would push the
       // canvas past iOS Safari's 16384-pixel-per-side limit.
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -1361,7 +1362,7 @@ function Rocket() {
       vh = cssH;
       // Bail if nothing meaningful changed. Setting canvas.width/height
       // reallocates the backing buffer (and zeroes it), which causes a
-      // visible stutter — and ResizeObserver can fire repeatedly during
+      // visible stutter - and ResizeObserver can fire repeatedly during
       // iOS URL-bar show/hide. Dedupe so rAF stays smooth.
       if (dpr === lastDpr && cssW === lastCssW && cssDocH === lastCssDocH) return;
       lastDpr = dpr; lastCssW = cssW; lastCssDocH = cssDocH;
@@ -1382,21 +1383,21 @@ function Rocket() {
       : null;
     if (docResizeObs) docResizeObs.observe(document.body);
 
-    // ── Particle pool ───────────────────────────────────────────
+    // Particle pool 
     // Plain array; ~96 live particles max at default settings, which
     // is well below any worry threshold for canvas fillRect cost.
     const particles = [];
 
     // Compute the ship's *target* position in document coordinates.
     //
-    // The ship's progress is purely time-based — it ignores scroll
+    // The ship's progress is purely time-based - it ignores scroll
     // entirely. So if the user lingers at the top of the page, the
     // ship continues its journey on its own and may end up far below
     // the visible viewport.
     //
     // We pass in `simElapsedMs` (simulated elapsed time) rather than
     // wall-clock time so we can speed the ship up when the cursor
-    // hovers near it without causing a position jump — the multiplier
+    // hovers near it without causing a position jump - the multiplier
     // affects how fast `simElapsedMs` advances, not what we plug in.
     //
     // Two sine oscillations:
@@ -1412,7 +1413,7 @@ function Rocket() {
       const yPhase = (simElapsedMs / 1000 / Y_PERIOD_S) * Math.PI * 2 + Math.PI;
       const xPhase = (simElapsedMs / 1000 / X_PERIOD_S) * Math.PI * 2;
 
-      // y ranges over (margin, docH - margin) — the full document.
+      // y ranges over (margin, docH - margin) - the full document.
       // x stays inside the viewport so the ship doesn't get clipped
       // by the body's overflow-x: hidden.
       const ty = (docH * 0.5) + Math.cos(yPhase) * (docH * 0.5 - PATH_MARGIN);
@@ -1420,7 +1421,7 @@ function Rocket() {
       return { tx, ty };
     };
 
-    // ── State for the rAF loop ──────────────────────────────────
+    // State for the rAF loop 
     // Initialize the ship at its first target so it doesn't fly in
     // from the (0, 0) corner on mount.
     let simElapsedMs = 0;             // simulated time, advances by dt × multiplier each frame
@@ -1443,7 +1444,7 @@ function Rocket() {
       const dt = dtMs / 1000;
       lastTime = now;
 
-      // ── Hover detection + speed multiplier ───────────────────
+      // Hover detection + speed multiplier 
       // Distance from cursor (viewport coords) to the ship's current
       // viewport position. Inside HOVER_RADIUS_PX → speed multiplier
       // eases toward HOVER (3×); otherwise toward BASE (1×). Easing
@@ -1476,7 +1477,7 @@ function Rocket() {
         : prevAngle;
       prevAngle = angle;
 
-      // ── Emit new particles at the ship's tail ────────────────
+      // Emit new particles at the ship's tail 
       // heading = angle - π/2 (undo the SVG offset) gives the actual
       // direction the nose points; tail is the opposite direction.
       // Low speed threshold so even the slow orbit emits steadily.
@@ -1485,7 +1486,7 @@ function Rocket() {
         const cosH = Math.cos(heading);
         const sinH = Math.sin(heading);
         const tailDist = 14;
-        // Scale spawn count with the speed multiplier — at 3× speed,
+        // Scale spawn count with the speed multiplier - at 3× speed,
         // ship covers 3× the distance per frame, so 3× the particles
         // keep the trail visually dense.
         const spawnCount = Math.round(SPAWN_PER_FRAME * curMultiplier);
@@ -1505,18 +1506,18 @@ function Rocket() {
         }
       }
 
-      // ── Update + render particles ────────────────────────────
+      // Update + render particles 
       // Canvas is full-document-sized but we only clear the visible
       // viewport region each frame. Particles outside the viewport are
       // culled (not redrawn), so old draws of them stay on the canvas
-      // in non-viewport regions — and any time the user scrolls into
+      // in non-viewport regions - and any time the user scrolls into
       // such a region, *that* frame's clear (covering the new viewport)
       // wipes the stale draws before the user can see them. Net result:
       // visually clean, with ~1/30th the per-frame fill cost vs. clearing
       // the entire 6000-px-tall canvas. Big win on mobile GPUs.
       const scrollX = window.scrollX;
       const scrollY = window.scrollY;
-      // Read viewport height fresh each frame — iOS URL bar show/hide
+      // Read viewport height fresh each frame - iOS URL bar show/hide
       // changes innerHeight without firing resize.
       vh = window.innerHeight;
       const cullPad = PARTICLE_BASE_R + PARTICLE_GROW_R;
@@ -1536,7 +1537,7 @@ function Rocket() {
         p.y += p.vy;
 
         // Cull particles fully outside the visible viewport (doc-coord
-        // bounds). They still age — they just don't get drawn.
+        // bounds). They still age - they just don't get drawn.
         if (p.x < scrollX - cullPad || p.x > scrollX + w + cullPad ||
             p.y < scrollY - cullPad || p.y > scrollY + vh + cullPad) continue;
 
@@ -1550,7 +1551,7 @@ function Rocket() {
         // Alpha: bright at birth, fades to 0 at end of life.
         const alpha = (1 - lifeT) * PARTICLE_BIRTH_ALPHA;
 
-        // Soft round particle via radial gradient — gives a hot
+        // Soft round particle via radial gradient - gives a hot
         // core with a feathered edge instead of a hard circle.
         const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius);
         grad.addColorStop(0, `rgba(${r | 0},${g | 0},${b | 0},${alpha})`);
@@ -1561,7 +1562,7 @@ function Rocket() {
         ctx.fill();
       }
 
-      // ── Position the ship ────────────────────────────────────
+      // Position the ship 
       // The ship is position:absolute on the document, so the
       // translate() values are document coords directly. Negative
       // margins on .rocket-ship in CSS center the ship's bounding
@@ -1572,7 +1573,7 @@ function Rocket() {
       prevX = curX; prevY = curY;
     };
 
-    // Cursor tracking — used by the hover-speedup logic above.
+    // Cursor tracking - used by the hover-speedup logic above.
     const onMove = (e) => { mouseX = e.clientX; mouseY = e.clientY; };
     const onLeave = () => { mouseX = -9999; mouseY = -9999; };
     window.addEventListener('mousemove', onMove, { passive: true });
@@ -1594,7 +1595,7 @@ function Rocket() {
       <canvas ref={canvasRef} className="rocket-trail" aria-hidden="true" />
       <div ref={shipRef} className="rocket-ship" aria-hidden="true">
         <svg viewBox="-20 -28 40 56" width="36" height="50" style={{ overflow: 'visible' }}>
-          {/* Exhaust flame — flickers via CSS keyframes (see styles.css). */}
+          {/* Exhaust flame - flickers via CSS keyframes (see styles.css). */}
           <g className="rocket-flame">
             <path d="M -5 16 Q -3 28 0 32 Q 3 28 5 16 Z" fill="oklch(58% 0.19 25)" opacity="0.92" />
             <path d="M -3 16 Q -2 24 0 28 Q 2 24 3 16 Z" fill="oklch(78% 0.18 60)" />
@@ -1628,8 +1629,8 @@ function Rocket() {
  *     and a visible drill housing + bit at the arm's end. Outer wheel
  *     rings are gray (was pure black) so they actually read.
  *
- *   - Helicopter: V2 toy "compact" body — small cubic body, dome
- *     roof, four splayed legs — but with two cosmetic fixes:
+ *   - Helicopter: V2 toy "compact" body - small cubic body, dome
+ *     roof, four splayed legs - but with two cosmetic fixes:
  *       1. The rotor is a *static* horizontal blur ellipse rather
  *          than a fast-spinning thin blade. At 10 rev/s a thin
  *          ellipse aliases between frames and reads as "shaky";
@@ -1638,7 +1639,7 @@ function Rocket() {
  *       2. The whole craft is tilted 6° clockwise so it reads as
  *          flying forward instead of just hovering in place.
  *
- *   - Ground: V1 cracked-mud — branching crack networks, secondary
+ *   - Ground: V1 cracked-mud - branching crack networks, secondary
  *     thin texture cracks, embedded gray rock chunks with rim
  *     highlights, dust pebbles, and a soft ground-band fill so the
  *     dirt has visible mass instead of being a single line.
@@ -1650,13 +1651,13 @@ function Rocket() {
  *   - CSS keyframes (.mars-bob-toy, .mars-bounce-toy) drive the
  *     vertical bob and bounce. Those wrappers sit *inside* the
  *     positioning <g transform="translate(...)">, so the CSS only
- *     touches the wrapper — leaving the parent positioning intact.
+ *     touches the wrapper - leaving the parent positioning intact.
  */
 function MarsDivider() {
   const TILE_W = 480;
   const WHEEL_SPIN = { from: '0', to: '360', dur: '0.5s' };
 
-  // Cracked-mud ground tile — branching cracks, embedded rock
+  // Cracked-mud ground tile - branching cracks, embedded rock
   // chunks with highlights, secondary texture cracks, dust pebbles,
   // and a soft ground-band tone underneath so the dirt reads as
   // substance instead of a single line.
@@ -1747,9 +1748,9 @@ function MarsDivider() {
           <CrackTile offset={TILE_W} />
         </g>
 
-        {/* Compact tilted Ingenuity — V2 body + static blur rotor + 6° tilt */}
+        {/* Compact tilted Ingenuity - V2 body + static blur rotor + 6° tilt */}
         <g transform="translate(140, 80)">
-          {/* Hover bob — SMIL animateTransform inside the SVG (was a CSS
+          {/* Hover bob - SMIL animateTransform inside the SVG (was a CSS
               class on the wrapper, but CSS transforms on SVG <g> elements
               were rendering as still in the user's browser). Translates the
               whole helicopter up 7 SVG units and back over 1.4 s. */}
@@ -1757,14 +1758,14 @@ function MarsDivider() {
             <animateTransform attributeName="transform" type="translate"
               values="0,0; 0,-7; 0,0" keyTimes="0; 0.5; 1"
               dur="1.4s" repeatCount="indefinite" />
-            {/* Inner rotation — tilts the whole craft forward (right) so it
+            {/* Inner rotation - tilts the whole craft forward (right) so it
                 reads as moving through the scene instead of hovering. */}
             <g transform="rotate(6)">
               {/* STATIC coaxial swept-rotor "blur disks".
                   Real Ingenuity has two counter-rotating rotors stacked
                   ~4 SVG units apart on the same mast. An animated thin
                   ellipse at ~10 rev/s aliases between frames and reads
-                  as shaky, so each rotor is a stable motion-blur disk —
+                  as shaky, so each rotor is a stable motion-blur disk -
                   same speed cue without per-frame jitter. */}
               <g transform="translate(0, -22)">
                 <ellipse rx="22" ry="2.8" fill="#555" opacity="0.4" />
@@ -1776,7 +1777,7 @@ function MarsDivider() {
                 <ellipse rx="22" ry="1.4" fill="#1a1a1a" opacity="0.75" />
                 <circle r="2" fill="#666" stroke="#1a1a1a" strokeWidth="0.6" />
               </g>
-              {/* mast — extended up past the second rotor */}
+              {/* mast - extended up past the second rotor */}
               <rect x="-1.5" y="-20" width="3" height="13" rx="0.8"
                 fill="#888" stroke="#1a1a1a" strokeWidth="0.5" />
               {/* small cubic body */}
@@ -1798,7 +1799,7 @@ function MarsDivider() {
           </g>
         </g>
 
-        {/* Toy Perseverance — Mastcam-Z mast + head, raised arm w/ visible drill */}
+        {/* Toy Perseverance - Mastcam-Z mast + head, raised arm w/ visible drill */}
         <g transform="translate(310, 86)">
           <g className="mars-bounce-toy">
             {/* solar panel on top */}
@@ -1829,7 +1830,7 @@ function MarsDivider() {
             {/* chunky body */}
             <rect x="-28" y="-16" width="56" height="22" rx="6"
               fill="#aaa" stroke="#1a1a1a" strokeWidth="2" />
-            {/* ARTICULATED + ANIMATED ROBOTIC ARM — modeled on
+            {/* ARTICULATED + ANIMATED ROBOTIC ARM - modeled on
                 Perseverance's Sample Caching System. Two SMIL-driven
                 joints (shoulder + elbow) cycle the arm through four
                 poses every 6 seconds: scanning sky → higher scan →
@@ -1854,33 +1855,33 @@ function MarsDivider() {
             {/* shoulder pivot circle (static) */}
             <circle cx="28" cy="-9" r="1.6"
               fill="#666" stroke="#1a1a1a" strokeWidth="0.8" />
-            {/* shoulder pivot group — translate to pivot point */}
+            {/* shoulder pivot group - translate to pivot point */}
             <g transform="translate(28, -9)">
-              {/* shoulder rotation — animated through pose cycle */}
+              {/* shoulder rotation - animated through pose cycle */}
               <g>
                 <animateTransform attributeName="transform" type="rotate"
                   values="-33; -50; -10; 5; -33"
                   keyTimes="0; 0.25; 0.5; 0.7; 1"
                   dur="6s" repeatCount="indefinite" />
-                {/* upper arm boom — drawn horizontal; the rotation
+                {/* upper arm boom - drawn horizontal; the rotation
                     above is what tilts it visually. */}
                 <rect x="0" y="-1.8" width="14.4" height="3.6" rx="0.6"
                   fill="#888" stroke="#1a1a1a" strokeWidth="1.1" />
                 <line x1="2" y1="0" x2="13" y2="0"
                   stroke="#1a1a1a" strokeWidth="0.4" opacity="0.55" />
-                {/* elbow joint — sits at the end of the upper arm */}
+                {/* elbow joint - sits at the end of the upper arm */}
                 <circle cx="14.4" cy="0" r="2.4"
                   fill="#666" stroke="#1a1a1a" strokeWidth="1" />
                 <circle cx="14.4" cy="0" r="0.9" fill="#1a1a1a" />
                 {/* elbow pivot group */}
                 <g transform="translate(14.4, 0)">
-                  {/* elbow rotation — animated through the same cycle */}
+                  {/* elbow rotation - animated through the same cycle */}
                   <g>
                     <animateTransform attributeName="transform" type="rotate"
                       values="-17; -30; 0; 25; -17"
                       keyTimes="0; 0.25; 0.5; 0.7; 1"
                       dur="6s" repeatCount="indefinite" />
-                    {/* forearm boom — drawn horizontal */}
+                    {/* forearm boom - drawn horizontal */}
                     <rect x="0" y="-1.7" width="15.6" height="3.4" rx="0.5"
                       fill="#888" stroke="#1a1a1a" strokeWidth="1.1" />
                     <line x1="2" y1="0" x2="13.6" y2="0"
@@ -1888,7 +1889,7 @@ function MarsDivider() {
                     {/* wrist joint at forearm end */}
                     <circle cx="15.6" cy="0" r="2"
                       fill="#666" stroke="#1a1a1a" strokeWidth="1" />
-                    {/* TURRET + DRILL — translated to wrist, rotated
+                    {/* TURRET + DRILL - translated to wrist, rotated
                         -90° so the drill points "out" from the wrist
                         (perpendicular to the forearm). The whole
                         assembly inherits the cumulative shoulder +
@@ -1902,7 +1903,7 @@ function MarsDivider() {
                       {/* drill housing */}
                       <rect x="-1.6" y="-7" width="3.2" height="4.5" rx="0.4"
                         fill="#666" stroke="#1a1a1a" strokeWidth="0.9" />
-                      {/* drill bit — pointed */}
+                      {/* drill bit - pointed */}
                       <polygon points="-1.6,-7 1.6,-7 0,-12.5"
                         fill="#444" stroke="#1a1a1a" strokeWidth="0.8" strokeLinejoin="round" />
                       <line x1="-1.2" y1="-8.5"  x2="1.2" y2="-8.5"  stroke="#1a1a1a" strokeWidth="0.4" />
@@ -1917,12 +1918,12 @@ function MarsDivider() {
             <line x1="-22" y1="6" x2="-22" y2="9" stroke="#1a1a1a" strokeWidth="1.5" />
             <line x1="0"   y1="6" x2="0"   y2="9" stroke="#1a1a1a" strokeWidth="1.5" />
             <line x1="22"  y1="6" x2="22"  y2="9" stroke="#1a1a1a" strokeWidth="1.5" />
-            {/* Moon-dust puffs trailing the back wheel — 5 staggered
+            {/* Moon-dust puffs trailing the back wheel - 5 staggered
                 radial-gradient puffs form a continuously dense stream.
                 Each puff: opacity fades in fast then out long, radius
                 grows from 3 → 14, drifts back-and-up out of the wheel
                 track. Color stays a flat warm gray throughout (no
-                fire-to-smoke fade — this is dust, not exhaust). The
+                fire-to-smoke fade - this is dust, not exhaust). The
                 soft feathered edges come from the radial gradient
                 defined in <defs>. Drawn before the wheels so the
                 wheel renders on top of the spawn origin. */}
@@ -1939,7 +1940,7 @@ function MarsDivider() {
                 </circle>
               ))}
             </g>
-            {/* big chunky drum wheels — outer ring gray (not black) */}
+            {/* big chunky drum wheels - outer ring gray (not black) */}
             {[-22, 0, 22].map((cx) => (
               <g key={cx} transform={`translate(${cx}, 9)`}>
                 <g>
@@ -1967,8 +1968,8 @@ function MarsDivider() {
  * "tweaks-panel.jsx" that attaches helpers (useTweaks, TweaksPanel,
  * etc.) onto the global window. When present, those globals power a
  * floating dev panel for live-tweaking the accent color, starfield,
- * and scanline overlay. When absent — which is the normal production
- * path — every reference is gated behind `window.useTweaks ? ... :
+ * and scanline overlay. When absent - which is the normal production
+ * path - every reference is gated behind `window.useTweaks ? ... :
  * null` so the component renders exactly the same tree without it.
  */
 function App() {
